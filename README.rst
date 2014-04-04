@@ -51,7 +51,7 @@ Contribute
 #. Write a test which shows that the bug was fixed or that the feature works as expected.
 #. Send a pull request and bug the maintainer until it gets merged and published.  :)
 
-.. _`the repository`: https://github.com/akamai-open/edgegrid-python
+.. _`the repository`: https://github.com/akamai-open/AkamaiOPEN-edgegrid-python
 
 Author
 ------

@@ -5,7 +5,7 @@ setup(
     description='{OPEN} client authentication protocol for python-requests',
     author='Jonathan Landis',
     author_email='jlandis@akamai.com',
-    url='https://gsd.akamai.com/stash/users/jlandis/repos/edgegrid-python',
+    url='https://github.com/akamai-open/AkamaiOPEN-edgegrid-python',
     packages=find_packages(),
     install_requires = [
         'requests'
