@@ -32,6 +32,12 @@ visit the `Akamai {OPEN} Developer Community`_.
 Installation
 ------------
 
+To install from pip:
+
+.. code-block:: bash
+
+    $ pip install edgegrid-python
+
 To install from sources:
 
 .. code-block:: bash
