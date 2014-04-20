@@ -8,7 +8,7 @@ setup(
     url='https://github.com/akamai-open/AkamaiOPEN-edgegrid-python',
     packages=find_packages(),
     install_requires = [
-        'requests'
+        'requests>=1.2.2'
     ],
     license='LICENSE.txt'
 )
