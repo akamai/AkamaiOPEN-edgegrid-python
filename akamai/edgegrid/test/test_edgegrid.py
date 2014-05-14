@@ -106,7 +106,7 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth(
             client_token='xxx', client_secret='xxx', access_token='xxx'
         )
-        self.assertEquals(auth.max_body, 2048)
+        self.assertEquals(auth.max_body, 128*1024)
         self.assertEquals(auth.headers_to_sign, [])
 
 def suite():
