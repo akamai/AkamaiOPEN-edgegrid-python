@@ -6,6 +6,7 @@ setup(
     author='Jonathan Landis',
     author_email='jlandis@akamai.com',
     url='https://github.com/akamai-open/AkamaiOPEN-edgegrid-python',
+    namespace_packages=['akamai'],
     packages=find_packages(),
     install_requires = [
         'requests>=1.2.2'
