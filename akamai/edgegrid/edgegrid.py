@@ -68,7 +68,7 @@ class EdgeGridAuth(AuthBase):
     """
 
     def __init__(self, client_token, client_secret, access_token, 
-                 headers_to_sign=None, max_body=128*1024):
+                 headers_to_sign=None, max_body=2048):
         """Initialize authentication using the given parameters from the Luna Manage APIs
            Interface:
 
