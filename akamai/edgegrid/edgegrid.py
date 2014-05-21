@@ -113,7 +113,13 @@ class EdgeGridAuth(AuthBase):
         if r.method == 'POST' and len(prepared_body) > 0:
             logger.debug("signing content: %s", prepared_body)
             if len(prepared_body) > self.max_body:
-                raise Exception('body is too large.  max_body=%s' % self.max_body)
+                logger.debug(
+                    "data length %d is larger than maximum %d", 
+                    len(prepared_body), self.max_body
+                )
+                prepared_body = prepared_body[0:self.max_body]
+                logger.debug("data truncated to %d for computing the hash", len(prepared_body))
+
             content_hash = base64_sha256(prepared_body)
 
         logger.debug("content hash is '%s'", content_hash)
