@@ -13,9 +13,9 @@ visit the `Akamai {OPEN} Developer Community`_.
     >>> baseurl = 'https://akaa-WWWWWWWWWWWW.luna.akamaiapis.net/'
     >>> s = requests.Session()
     >>> s.auth = EdgeGridAuth(
-        client_token='akab-XXXXXXXXXXXXXXXXXXXXXXX',
-        client_secret='YYYYYYYYYYYYYYYYYYYYYYYYYY',
-        access_token='akab-ZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
+        client_token='ccccccccccccccccc',
+        client_secret='ssssssssssssssssss',
+        access_token='aaaaaaaaaaaaaaaaaaaaa'
     )
 
     >>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))

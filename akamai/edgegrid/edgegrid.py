@@ -60,9 +60,9 @@ class EdgeGridAuth(AuthBase):
         >>> from akamai.edgegrid import EdgeGridAuth
         >>> s = requests.Session()
         >>> s.auth = EdgeGridAuth(
-            client_token='akab-XXXXXXXXXXXXXXXXXXXXXXX',
-            client_secret='YYYYYYYYYYYYYYYYYYYYYYYYYY',
-            access_token='akab-ZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
+            client_token='cccccccccccccccccc',
+            client_secret='sssssssssssssssss',
+            access_token='aaaaaaaaaaaaaaaaa'
         )
 
     """
