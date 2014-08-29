@@ -3,6 +3,11 @@
 History
 -------
 
+1.0.2 (2014-08-29)
+++++++++++++++++++
+
+- add testurl parameter for overriding method and host for testing
+
 1.0.1 (2014-05-14)
 ++++++++++++++++++
 
