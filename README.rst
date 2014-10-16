@@ -2,7 +2,7 @@ EdgeGrid for Python
 ===================
 
 This library implements an Authentication handler for `requests`_
-that provides the `Akamai {OPEN} Edgegrid Authentication`_ scheme. For more infomation
+that provides the `Akamai {OPEN} Edgegrid Authentication`_ scheme. For more information
 visit the `Akamai {OPEN} Developer Community`_.
 
 .. code-block:: pycon
@@ -26,7 +26,7 @@ visit the `Akamai {OPEN} Developer Community`_.
     ...
 
 .. _`requests`: http://docs.python-requests.org
-.. _`Akamai {OPEN} Edgegrid authentication`: https://developer.akamai.com/stuff/Getting_Started_with_OPEN_APIs/Client_Auth.html
+.. _`Akamai {OPEN} Edgegrid authentication`: https://developer.akamai.com/introduction/Client_Auth.html
 .. _`Akamai {OPEN} Developer Community`: https://developer.akamai.com
 
 Installation

@@ -4,7 +4,7 @@ akamai.edgegrid
 
 This library provides an authentication handler for Requests that implements the 
 Akamai {OPEN} EdgeGrid client authentication protocol as 
-specified by https://developer.akamai.com/stuff/Getting_Started_with_OPEN_APIs/Client_Auth.html.
+specified by https://developer.akamai.com/introduction/Client_Auth.html.
 For more information visit https://developer.akamai.com.
 
 usage:
