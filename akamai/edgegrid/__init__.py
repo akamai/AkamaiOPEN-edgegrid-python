@@ -31,7 +31,8 @@ usage:
 """
 
 from edgegrid import EdgeGridAuth
-__all__=['EdgeGridAuth']
+from edgerc import EdgeRc
+__all__=['EdgeGridAuth', 'EdgeRc']
 
 __title__ = 'edgegrid-python'
 __version__ = '1.0'

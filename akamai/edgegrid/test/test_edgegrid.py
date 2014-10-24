@@ -109,6 +109,28 @@ class EGSimpleTest(unittest.TestCase):
         self.assertEquals(auth.max_body, 2048)
         self.assertEquals(auth.headers_to_sign, [])
 
+    def test_edgerc_default(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'))
+        self.assertEquals(auth.client_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEquals(auth.client_secret, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=')
+        self.assertEquals(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEquals(auth.max_body, 131072)
+        self.assertEquals(auth.headers_to_sign, [])
+
+    def test_edgerc_broken(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'broken')
+        self.assertEquals(auth.client_secret, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=')
+        self.assertEquals(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEquals(auth.max_body, 2048)
+        self.assertEquals(auth.headers_to_sign, [])
+
+    def test_edgerc_unparseable(self):
+        try:
+            auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'edgerc_test_doesnt_parse'))
+            self.fail("should have thrown an exception")
+        except:
+            pass
+
 def suite():
     suite = unittest.TestSuite()
     with open("%s/testdata.json" % mydir) as testdata:
@@ -123,6 +145,9 @@ def suite():
     suite.addTest(EGSimpleTest('test_nonce'))
     suite.addTest(EGSimpleTest('test_timestamp'))
     suite.addTest(EGSimpleTest('test_defaults'))
+    suite.addTest(EGSimpleTest('test_edgerc_default'))
+    suite.addTest(EGSimpleTest('test_edgerc_broken'))
+    suite.addTest(EGSimpleTest('test_edgerc_unparseable'))
 
     return suite
 

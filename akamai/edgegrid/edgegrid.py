@@ -92,6 +92,27 @@ class EdgeGridAuth(AuthBase):
         self.max_body = max_body
         self.testurl = testurl
 
+    @staticmethod
+    def from_edgerc(filename, section='default'):
+        """Returns an EdgeGridAuth object from the configuration from the given section of the 
+           given edgerc file.
+
+        :param filename: path to the edgerc file
+        :param section: the section to use (this is the [bracketed] part of the edgerc, 
+            default is 'default')
+
+        """
+        from edgerc import EdgeRc 
+        rc = EdgeRc(filename)
+
+        return EdgeGridAuth(
+            client_token=rc.get(section, 'client_token'),
+            client_secret=rc.get(section, 'client_secret'),
+            access_token=rc.get(section, 'access_token'),
+            headers_to_sign=rc.get(section, 'headers_to_sign'),
+            max_body=rc.getint(section, 'max_body')
+        )
+
     def make_signing_key(self, timestamp):
         signing_key = base64_hmac_sha256(timestamp, self.client_secret)
         logger.debug('signing key: %s', signing_key)
