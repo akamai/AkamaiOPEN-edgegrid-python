@@ -109,7 +109,7 @@ class EdgeGridAuth(AuthBase):
             client_token=rc.get(section, 'client_token'),
             client_secret=rc.get(section, 'client_secret'),
             access_token=rc.get(section, 'access_token'),
-            headers_to_sign=rc.get(section, 'headers_to_sign'),
+            headers_to_sign=rc.getlist(section, 'headers_to_sign'),
             max_body=rc.getint(section, 'max_body')
         )
 

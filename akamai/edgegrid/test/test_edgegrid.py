@@ -131,6 +131,10 @@ class EGSimpleTest(unittest.TestCase):
         except:
             pass
 
+    def test_edgerc_headers(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'headers')
+        self.assertEquals(auth.headers_to_sign, ['x-mything1', 'x-mything2'])
+
 def suite():
     suite = unittest.TestSuite()
     with open("%s/testdata.json" % mydir) as testdata:
@@ -148,6 +152,7 @@ def suite():
     suite.addTest(EGSimpleTest('test_edgerc_default'))
     suite.addTest(EGSimpleTest('test_edgerc_broken'))
     suite.addTest(EGSimpleTest('test_edgerc_unparseable'))
+    suite.addTest(EGSimpleTest('test_edgerc_headers'))
 
     return suite
 

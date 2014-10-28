@@ -49,3 +49,14 @@ class EdgeRc(ConfigParser):
 
         for section in self.sections():
             validate_section(section)
+
+    def getlist(self, section, option):
+        """
+            returns the named option as a list, splitting the original value
+            by ','
+        """
+        value = self.get(section, option)
+        if value:
+            return value.split(',')
+        else:
+            return None
