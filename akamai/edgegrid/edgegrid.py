@@ -30,11 +30,15 @@ import re
 import sys
 from requests.auth import AuthBase
 from time import gmtime, strftime
-from urlparse import urlparse, parse_qsl, urlunparse
 
-if sys.version_info[0] != 2 or sys.version_info[1] < 7:
-    print("This script requires Python version 2.7")
-    sys.exit(1)
+if sys.version_info[0] == 3:
+    from urllib.urlparse import urlparse, parse_qsl, urlunparse
+else:
+    from urlparse import urlparse, parse_qsl, urlunparse
+
+#if sys.version_info[0] != 2 or sys.version_info[1] < 7:
+#    print("This script requires Python version 2.7")
+#    sys.exit(1)
 
 logger = logging.getLogger(__name__)
 
