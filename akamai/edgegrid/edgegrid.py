@@ -140,10 +140,16 @@ class EdgeGridAuth(AuthBase):
             url = r.url
 
         parsed_url = urlparse(url)
+
+        if (r.headers.get('Host', False)):
+            netloc = r.headers['Host']
+        else:
+            netloc = parsed_url.netloc
+
         data_to_sign = '\t'.join([
             r.method,
             parsed_url.scheme,
-            parsed_url.netloc,
+            netloc,
             # Note: relative URL constraints are handled by requests when it sets up 'r'
             parsed_url.path + ('?' + parsed_url.query if parsed_url.query else ""),
             self.canonicalize_headers(r),
