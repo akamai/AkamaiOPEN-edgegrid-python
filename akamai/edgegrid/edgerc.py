@@ -16,8 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ConfigParser import ConfigParser
 import logging
+import sys
+
+if sys.version_info[0] >= 3:
+    # python3
+    from configparser import ConfigParser
+else:
+    # python2.7
+    from ConfigParser import ConfigParser
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +36,7 @@ class EdgeRc(ConfigParser):
         ConfigParser.__init__(self, {'max_body': '2048', 'headers_to_sign': None})
         logger.debug("loading edgerc from %s", filename)
 
-        with open(filename) as f:
-            self.readfp(f)
-
+        self.read(filename)
         self.validate()
 
         logger.debug("successfully loaded edgerc")

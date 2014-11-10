@@ -31,7 +31,7 @@ import sys
 from requests.auth import AuthBase
 from time import gmtime, strftime
 
-if sys.version_info[0] == 3:
+if sys.version_info[0] >= 3:
     # python3
     from urllib.parse import urlparse, parse_qsl, urlunparse
 else:
@@ -104,7 +104,7 @@ class EdgeGridAuth(AuthBase):
             default is 'default')
 
         """
-        from edgerc import EdgeRc 
+        from .edgerc import EdgeRc 
         rc = EdgeRc(filename)
 
         return EdgeGridAuth(
