@@ -8,6 +8,7 @@ History
 
 - support 'Host' header more transparently
 - remove testurl since new 'Host' support handles the same case
+- support edgerc file
 
 1.0.4 (2014-11-05)
 ++++++++++++++++++
