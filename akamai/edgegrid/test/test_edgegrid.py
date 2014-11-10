@@ -80,7 +80,7 @@ class EdgeGridTest(unittest.TestCase):
             self.assertEquals(str(e), self.testcase['failsWithMessage'])
             return
 
-        self.assertEquals(auth_header, self.testcase['expectedAuthorization'])
+        self.assertEqual(auth_header, self.testcase['expectedAuthorization'])
 
 class EGSimpleTest(unittest.TestCase):
     def test_nonce(self):
@@ -112,8 +112,34 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth(
             client_token='xxx', client_secret='xxx', access_token='xxx'
         )
-        self.assertEquals(auth.max_body, 2048)
-        self.assertEquals(auth.headers_to_sign, [])
+        self.assertEqual(auth.max_body, 2048)
+        self.assertEqual(auth.headers_to_sign, [])
+
+    def test_edgerc_default(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'))
+        self.assertEqual(auth.client_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEqual(auth.client_secret, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=')
+        self.assertEqual(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEqual(auth.max_body, 131072)
+        self.assertEqual(auth.headers_to_sign, [])
+
+    def test_edgerc_broken(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'broken')
+        self.assertEqual(auth.client_secret, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=')
+        self.assertEqual(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEqual(auth.max_body, 2048)
+        self.assertEqual(auth.headers_to_sign, [])
+
+    def test_edgerc_unparseable(self):
+        try:
+            auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'edgerc_test_doesnt_parse'))
+            self.fail("should have thrown an exception")
+        except:
+            pass
+
+    def test_edgerc_headers(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'headers')
+        self.assertEqual(auth.headers_to_sign, ['x-mything1', 'x-mything2'])
 
 def suite():
     suite = unittest.TestSuite()
@@ -129,6 +155,10 @@ def suite():
     suite.addTest(EGSimpleTest('test_nonce'))
     suite.addTest(EGSimpleTest('test_timestamp'))
     suite.addTest(EGSimpleTest('test_defaults'))
+    suite.addTest(EGSimpleTest('test_edgerc_default'))
+    suite.addTest(EGSimpleTest('test_edgerc_broken'))
+    suite.addTest(EGSimpleTest('test_edgerc_unparseable'))
+    suite.addTest(EGSimpleTest('test_edgerc_headers'))
 
     return suite
 

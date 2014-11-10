@@ -31,7 +31,7 @@ import sys
 from requests.auth import AuthBase
 from time import gmtime, strftime
 
-if sys.version_info[0] == 3:
+if sys.version_info[0] >= 3:
     # python3
     from urllib.parse import urlparse, parse_qsl, urlunparse
 else:
@@ -93,6 +93,27 @@ class EdgeGridAuth(AuthBase):
         else:
             self.headers_to_sign = []
         self.max_body = max_body
+
+    @staticmethod
+    def from_edgerc(filename, section='default'):
+        """Returns an EdgeGridAuth object from the configuration from the given section of the 
+           given edgerc file.
+
+        :param filename: path to the edgerc file
+        :param section: the section to use (this is the [bracketed] part of the edgerc, 
+            default is 'default')
+
+        """
+        from .edgerc import EdgeRc 
+        rc = EdgeRc(filename)
+
+        return EdgeGridAuth(
+            client_token=rc.get(section, 'client_token'),
+            client_secret=rc.get(section, 'client_secret'),
+            access_token=rc.get(section, 'access_token'),
+            headers_to_sign=rc.getlist(section, 'headers_to_sign'),
+            max_body=rc.getint(section, 'max_body')
+        )
 
     def make_signing_key(self, timestamp):
         signing_key = base64_hmac_sha256(timestamp, self.client_secret)
