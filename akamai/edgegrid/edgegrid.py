@@ -72,7 +72,7 @@ class EdgeGridAuth(AuthBase):
     """
 
     def __init__(self, client_token, client_secret, access_token, 
-                 headers_to_sign=None, max_body=2048, testurl=None):
+                 headers_to_sign=None, max_body=2048):
         """Initialize authentication using the given parameters from the Luna Manage APIs
            Interface:
 
@@ -83,7 +83,6 @@ class EdgeGridAuth(AuthBase):
             the signature.  This will be provided by specific APIs. (default [])
         :param max_body: Maximum content body size for POST requests. This will be provided by
             specific APIs. (default 2048)
-        :param testurl: Use this value for method and host portion of URL when signing.
 
         """
         self.client_token = client_token
@@ -94,7 +93,6 @@ class EdgeGridAuth(AuthBase):
         else:
             self.headers_to_sign = []
         self.max_body = max_body
-        self.testurl = testurl
 
     def make_signing_key(self, timestamp):
         signing_key = base64_hmac_sha256(timestamp, self.client_secret)
@@ -110,7 +108,7 @@ class EdgeGridAuth(AuthBase):
             "%s:%s" % (h, spaces_re.sub(' ', r.headers[h].strip()))
             for h in self.headers_to_sign if h in r.headers
         ])
-        
+
     def make_content_hash(self, r):
         content_hash = ""
         prepared_body = (r.body or '')
@@ -132,14 +130,7 @@ class EdgeGridAuth(AuthBase):
         return content_hash
 
     def make_data_to_sign(self, r, auth_header):
-        if self.testurl:
-            testparts = urlparse(self.testurl)
-            requestparts = urlparse(r.url)
-            url = urlunparse(testparts[0:2] + requestparts[2:])
-        else:
-            url = r.url
-
-        parsed_url = urlparse(url)
+        parsed_url = urlparse(r.url)
 
         if (r.headers.get('Host', False)):
             netloc = r.headers['Host']
@@ -174,7 +165,7 @@ class EdgeGridAuth(AuthBase):
         ]
         auth_header = "EG1-HMAC-SHA256 " + ';'.join([ "%s=%s" % kvp for kvp in kvps ]) + ';'
         logger.debug('unsigned authorization header: %s', auth_header)
-        
+
         signed_auth_header = auth_header + \
             'signature=' + self.sign_request(r, timestamp, auth_header)
 
@@ -187,4 +178,3 @@ class EdgeGridAuth(AuthBase):
 
         r.headers['Authorization'] = self.make_auth_header(r, timestamp, nonce)
         return r
-
