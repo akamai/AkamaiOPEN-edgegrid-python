@@ -3,6 +3,17 @@
 History
 -------
 
+1.0.5 (2014-11-10)
+++++++++++++++++++
+
+- support 'Host' header more transparently
+- remove testurl since new 'Host' support handles the same case
+
+1.0.4 (2014-11-05)
+++++++++++++++++++
+
+- support python3
+
 1.0.3 (2014-10-16)
 ++++++++++++++++++
 

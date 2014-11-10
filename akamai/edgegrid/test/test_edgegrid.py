@@ -27,7 +27,13 @@ import requests
 import sys
 import traceback
 import unittest
-from urlparse import urljoin
+
+if sys.version_info[0] == 3:
+    # python3
+    from urllib.parse import urljoin
+else:
+    # python2.7
+    from urlparse import urljoin
 
 from akamai.edgegrid import EdgeGridAuth
 import akamai.edgegrid.edgegrid as eg
@@ -54,7 +60,7 @@ class EdgeGridTest(unittest.TestCase):
         headers = { }
         if 'headers' in self.testcase['request']:
             for h in self.testcase['request']['headers']:
-                for k,v in h.iteritems():
+                for k,v in h.items():
                     headers[k] = v
 
         request = requests.Request(
@@ -69,7 +75,7 @@ class EdgeGridTest(unittest.TestCase):
             auth_header = auth.make_auth_header(
                 request.prepare(), self.testdata['timestamp'], self.testdata['nonce']
             )
-        except Exception, e:
+        except Exception as e:
             logger.debug('Got exception from make_auth_header', exc_info=True)
             self.assertEquals(str(e), self.testcase['failsWithMessage'])
             return

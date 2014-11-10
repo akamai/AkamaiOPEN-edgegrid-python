@@ -30,8 +30,8 @@ usage:
     Hongkong, Hong Kong
 """
 
-from edgegrid import EdgeGridAuth
-from edgerc import EdgeRc
+from .edgegrid import EdgeGridAuth
+from .edgerc import EdgeRc
 __all__=['EdgeGridAuth', 'EdgeRc']
 
 __title__ = 'edgegrid-python'

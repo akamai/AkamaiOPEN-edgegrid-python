@@ -48,6 +48,9 @@ To run tests:
 
 .. code-block:: bash
 
+    $ virtualenv -p python2.7 venv
+    $ . venv/bin/activate
+    $ pip install -r requirements.txt
     $ python -m unittest discover
 
 Contribute
