@@ -3,6 +3,12 @@
 History
 -------
 
+1.0.6 (2015-02-28)
+++++++++++++++++++
+
+- support passing in EdgeRc to from_edgerc static method
+- fix problem with following redirects
+
 1.0.5 (2014-11-10)
 ++++++++++++++++++
 

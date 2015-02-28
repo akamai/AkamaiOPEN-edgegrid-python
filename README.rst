@@ -25,6 +25,28 @@ visit the `Akamai {OPEN} Developer Community`_.
     Hongkong, Hong Kong
     ...
 
+Alternatively, your program can read the credentials from an .edgerc file.
+
+.. code-block:: pycon
+
+    >>> import requests
+    >>> from akamai.edgegrid import EdgeGridAuth, EdgeRc
+    >>> from urlparse import urljoin
+
+    >>> edgerc = EdgeRc('credentials.edgerc')
+    >>> section = 'default'
+    >>> baseurl = 'https://%s' % edgerc.get(section, 'host')
+
+    >>> s = requests.Session()
+    >>> s.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+    >>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
+    >>> result.status_code
+    200
+    >>> result.json()['locations'][0]
+    Hongkong, Hong Kong
+    ...
+
 .. _`requests`: http://docs.python-requests.org
 .. _`Akamai {OPEN} Edgegrid authentication`: https://developer.akamai.com/introduction/Client_Auth.html
 .. _`Akamai {OPEN} Developer Community`: https://developer.akamai.com
@@ -70,7 +92,7 @@ Jonathan Landis
 License
 -------
 
-   Copyright 2014 Akamai Technologies, Inc. All rights reserved. 
+   Copyright 2015 Akamai Technologies, Inc. All rights reserved. 
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
