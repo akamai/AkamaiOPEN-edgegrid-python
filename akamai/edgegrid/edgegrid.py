@@ -94,8 +94,10 @@ class EdgeGridAuth(AuthBase):
             self.headers_to_sign = []
         self.max_body = max_body
 
+        self.redirect_location = None
+
     @staticmethod
-    def from_edgerc(filename, section='default'):
+    def from_edgerc(rcinput, section='default'):
         """Returns an EdgeGridAuth object from the configuration from the given section of the 
            given edgerc file.
 
@@ -105,7 +107,10 @@ class EdgeGridAuth(AuthBase):
 
         """
         from .edgerc import EdgeRc 
-        rc = EdgeRc(filename)
+        if isinstance(rcinput, EdgeRc):
+            rc = rcinput
+        else:
+            rc = EdgeRc(rcinput)
 
         return EdgeGridAuth(
             client_token=rc.get(section, 'client_token'),

@@ -35,7 +35,7 @@ else:
     # python2.7
     from urlparse import urljoin
 
-from akamai.edgegrid import EdgeGridAuth
+from akamai.edgegrid import EdgeGridAuth, EdgeRc
 import akamai.edgegrid.edgegrid as eg
 
 mydir=os.path.abspath(os.path.dirname(__file__))
@@ -141,6 +141,14 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'headers')
         self.assertEqual(auth.headers_to_sign, ['x-mything1', 'x-mything2'])
 
+    def test_edgerc_from_object(self):
+        auth = EdgeGridAuth.from_edgerc(EdgeRc(os.path.join(mydir, 'sample_edgerc')))
+        self.assertEqual(auth.client_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEqual(auth.client_secret, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=')
+        self.assertEqual(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
+        self.assertEqual(auth.max_body, 131072)
+        self.assertEqual(auth.headers_to_sign, [])
+
 def suite():
     suite = unittest.TestSuite()
     with open("%s/testdata.json" % mydir) as testdata:
@@ -159,6 +167,7 @@ def suite():
     suite.addTest(EGSimpleTest('test_edgerc_broken'))
     suite.addTest(EGSimpleTest('test_edgerc_unparseable'))
     suite.addTest(EGSimpleTest('test_edgerc_headers'))
+    suite.addTest(EGSimpleTest('test_edgerc_from_object'))
 
     return suite
 
