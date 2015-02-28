@@ -198,9 +198,22 @@ class EdgeGridAuth(AuthBase):
         logger.debug('signed authorization header: %s', signed_auth_header)
         return signed_auth_header
 
+    def handle_redirect(self, res, **kwargs):
+        if res.is_redirect:
+            redirect_location = res.headers['location']
+
+            logger.debug("signing the redirected url: %s", redirect_location)
+            request_to_sign = res.request.copy()
+            request_to_sign.url = redirect_location
+
+            res.request.headers['Authorization'] = self.make_auth_header(
+                request_to_sign, eg_timestamp(), new_nonce()
+            )
+
     def __call__(self, r):
         timestamp = eg_timestamp()
         nonce = new_nonce()
 
         r.headers['Authorization'] = self.make_auth_header(r, timestamp, nonce)
+        r.register_hook('response', self.handle_redirect)
         return r
