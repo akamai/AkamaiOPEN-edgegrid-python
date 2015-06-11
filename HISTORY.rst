@@ -3,6 +3,11 @@
 History
 -------
 
+1.0.7 (2015-06-11)
+++++++++++++++++++
+
+- use pyopenssl to improve security as per https://urllib3.readthedocs.org/en/latest/security.html#pyopenssl
+
 1.0.6 (2015-02-28)
 ++++++++++++++++++
 
