@@ -9,7 +9,7 @@ setup(
     namespace_packages=['akamai'],
     packages=find_packages(),
     install_requires = [
-        'requests>=1.2.2'
+        'requests>=2.3.0'
         'pyopenssl',
         'ndg-httpsclient',
         'pyasn1',
