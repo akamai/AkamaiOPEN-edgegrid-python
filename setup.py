@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='edgegrid-python', 
-    version='1.0.7', 
+    version='1.0.8', 
     description='{OPEN} client authentication protocol for python-requests',
     author='Jonathan Landis',
     author_email='jlandis@akamai.com',
