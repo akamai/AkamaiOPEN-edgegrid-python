@@ -33,13 +33,17 @@ class EdgeRc(ConfigParser):
     required_options = ['client_token', 'client_secret', 'host', 'access_token']
 
     def __init__(self, filename):
-        ConfigParser.__init__(self, {'max_body': '2048', 'headers_to_sign': None})
+        ConfigParser.__init__(self, {'max_body': '131072', 'headers_to_sign': None})
         logger.debug("loading edgerc from %s", filename)
 
         self.read(filename)
         self.validate()
 
         logger.debug("successfully loaded edgerc")
+
+    def optionxform(self, optionstr):
+        """support both max_body and max-body style keys"""
+        return optionstr.replace('-', '_')
 
     def validate(self):
         def validate_section(section):

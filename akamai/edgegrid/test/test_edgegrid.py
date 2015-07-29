@@ -127,7 +127,7 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'broken')
         self.assertEqual(auth.client_secret, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=')
         self.assertEqual(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
-        self.assertEqual(auth.max_body, 2048)
+        self.assertEqual(auth.max_body, 128*1024)
         self.assertEqual(auth.headers_to_sign, [])
 
     def test_edgerc_unparseable(self):
@@ -148,6 +148,10 @@ class EGSimpleTest(unittest.TestCase):
         self.assertEqual(auth.access_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
         self.assertEqual(auth.max_body, 131072)
         self.assertEqual(auth.headers_to_sign, [])
+
+    def test_edgerc_dashes(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'dashes')
+        self.assertEqual(auth.max_body, 128*1024)
 
 def suite():
     suite = unittest.TestSuite()

@@ -3,6 +3,18 @@
 History
 -------
 
+1.0.9 (2015-07-29)
+++++++++++++++++++
+
+- update default max_body to be 128k
+- read both max_body and max-body style properties from edgerc files
+
+1.0.8 (2015-06-23)
+++++++++++++++++++
+
+- update requests dependency version
+
+
 1.0.7 (2015-06-11)
 ++++++++++++++++++
 
