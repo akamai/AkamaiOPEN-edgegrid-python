@@ -36,9 +36,9 @@ if sys.version_info[0] >= 3:
     from urllib.parse import urlparse, parse_qsl, urlunparse
 else:
     # python2.7
-    from urlparse import urlparse, parse_qsl, urlunparse
-    import urllib3.contrib.pyopenssl
-    urllib3.contrib.pyopenssl.inject_into_urllib3()
+	from urlparse import urlparse, parse_qsl, urlunparse
+	import urllib3.contrib.pyopenssl
+	urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 logger = logging.getLogger(__name__)
 
