@@ -132,7 +132,7 @@ class EGSimpleTest(unittest.TestCase):
 
     def test_edgerc_unparseable(self):
         try:
-            auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'edgerc_test_doesnt_parse'))
+            auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'edgerc_that_doesnt_parse'))
             self.fail("should have thrown an exception")
         except:
             pass
