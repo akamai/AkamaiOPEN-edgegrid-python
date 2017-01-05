@@ -28,6 +28,7 @@ import sys
 import traceback
 import unittest
 
+PY_VER = sys.version_info[0]
 if sys.version_info[0] == 3:
     # python3
     from urllib.parse import urljoin
@@ -77,7 +78,7 @@ class EdgeGridTest(unittest.TestCase):
             )
         except Exception as e:
             logger.debug('Got exception from make_auth_header', exc_info=True)
-            self.assertEquals(str(e), self.testcase['failsWithMessage'])
+            self.assertEqual(str(e), self.testcase['failsWithMessage'])
             return
 
         self.assertEqual(auth_header, self.testcase['expectedAuthorization'])
@@ -106,7 +107,10 @@ class EGSimpleTest(unittest.TestCase):
             \+0000 # timezone
         $
         """, re.VERBOSE)
-        self.assertRegexpMatches(eg.eg_timestamp(), valid_timestamp)
+        if PY_VER >= 3:
+            self.assertRegex(eg.eg_timestamp(), valid_timestamp)
+        else:
+            self.assertRegexpMatches(eg.eg_timestamp(), valid_timestamp)
 
     def test_defaults(self):
         auth = EdgeGridAuth(
