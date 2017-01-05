@@ -56,7 +56,9 @@ def base64_hmac_sha256(data, key):
     ).decode('utf8')
 
 def base64_sha256(data):
-    return base64.b64encode(hashlib.sha256(data.encode('utf8')).digest()).decode('utf8')
+    if isinstance(data, str):
+        data = data.encode('utf8')
+    return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
 
 class EdgeGridAuth(AuthBase):
     """A Requests authentication handler that provides Akamai {OPEN} EdgeGrid support.

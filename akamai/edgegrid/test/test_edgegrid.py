@@ -157,6 +157,43 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'dashes')
         self.assertEqual(auth.max_body, 128*1024)
 
+
+class JsonTest(unittest.TestCase):
+    def __init__(self, testdata=None, testcase=None):
+        super(JsonTest, self).__init__()
+        self.testdata = testdata
+        self.testcase = testcase
+        self.maxDiff = None
+
+    def runTest(self):
+        auth = EdgeGridAuth(
+            client_token=self.testdata['client_token'],
+            client_secret=self.testdata['client_secret'],
+            access_token=self.testdata['access_token'],
+        )
+
+        params = {
+            'extended': 'true',
+        }
+
+        data = {
+            'key':'value',
+        }
+
+        request = requests.Request(
+            method='POST',
+            url=urljoin(self.testdata['base_url'],'/testapi/v1/t3'),
+            params=params,
+            json=data,
+        )
+
+        auth_header = auth.make_auth_header(
+            request.prepare(), self.testdata['timestamp'], self.testdata['nonce']
+        )
+
+        self.assertEqual(auth_header, self.testdata['jsontest_hash'])
+
+
 def suite():
     suite = unittest.TestSuite()
     with open("%s/testdata.json" % mydir) as testdata:
@@ -167,6 +204,8 @@ def suite():
 
     for test in tests:
         suite.addTest(EdgeGridTest(testdata, test))
+
+    suite.addTest(JsonTest(testdata))
 
     suite.addTest(EGSimpleTest('test_nonce'))
     suite.addTest(EGSimpleTest('test_timestamp'))
