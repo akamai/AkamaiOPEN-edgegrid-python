@@ -56,7 +56,9 @@ def base64_hmac_sha256(data, key):
     ).decode('utf8')
 
 def base64_sha256(data):
-    return base64.b64encode(hashlib.sha256(data.encode('utf8')).digest()).decode('utf8')
+    if isinstance(data, str):
+        data = data.encode('utf8')
+    return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
 
 class EdgeGridAuth(AuthBase):
     """A Requests authentication handler that provides Akamai {OPEN} EdgeGrid support.
@@ -74,7 +76,7 @@ class EdgeGridAuth(AuthBase):
     """
 
     def __init__(self, client_token, client_secret, access_token, 
-                 headers_to_sign=None, max_body=2048):
+                 headers_to_sign=None, max_body=131072):
         """Initialize authentication using the given parameters from the Luna Manage APIs
            Interface:
 
@@ -84,7 +86,7 @@ class EdgeGridAuth(AuthBase):
         :param headers_to_sign: An ordered list header names that will be included in 
             the signature.  This will be provided by specific APIs. (default [])
         :param max_body: Maximum content body size for POST requests. This will be provided by
-            specific APIs. (default 2048)
+            specific APIs. (default 131072)
 
         """
         self.client_token = client_token
