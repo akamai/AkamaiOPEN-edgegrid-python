@@ -30,35 +30,17 @@ else:
 logger = logging.getLogger(__name__)
 
 class EdgeRc(ConfigParser):
-    required_options = ['client_token', 'client_secret', 'host', 'access_token']
-
     def __init__(self, filename):
-        ConfigParser.__init__(self, {'max_body': '131072', 'headers_to_sign': None})
+        ConfigParser.__init__(self, {'client_token': '', 'client_secret':'', 'host':'', 'access_token':'','max_body': '131072', 'headers_to_sign': None})
         logger.debug("loading edgerc from %s", filename)
 
         self.read(filename)
-        self.validate()
 
         logger.debug("successfully loaded edgerc")
 
     def optionxform(self, optionstr):
         """support both max_body and max-body style keys"""
         return optionstr.replace('-', '_')
-
-    def validate(self):
-        def validate_section(section):
-            missing = []
-            for opt in self.required_options:
-                try:
-                    self.get(section, opt)
-                except:
-                    missing.append(opt)
-
-            if len(missing) > 0:
-                raise Exception("Missing required options: %s" % missing)
-
-        for section in self.sections():
-            validate_section(section)
 
     def getlist(self, section, option):
         """
