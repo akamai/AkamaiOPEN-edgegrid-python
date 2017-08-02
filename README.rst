@@ -18,11 +18,11 @@ visit the `Akamai {OPEN} Developer Community`_.
         access_token='aaaaaaaaaaaaaaaaaaaaa'
     )
 
-    >>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
+    >>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v2/ghost-locations/available'))
     >>> result.status_code
     200
-    >>> result.json()['locations'][0]
-    Hongkong, Hong Kong
+    >>> result.json()['locations'][0]['value']
+    Oakbrook, IL, United States
     ...
 
 Alternatively, your program can read the credentials from an .edgerc file.
@@ -40,11 +40,11 @@ Alternatively, your program can read the credentials from an .edgerc file.
     >>> s = requests.Session()
     >>> s.auth = EdgeGridAuth.from_edgerc(edgerc, section)
 
-    >>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
+    >>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v2/ghost-locations/available'))
     >>> result.status_code
     200
-    >>> result.json()['locations'][0]
-    Hongkong, Hong Kong
+    >>> result.json()['locations'][0]['value']
+    Oakbrook, IL, United States
     ...
 
 .. _`requests`: http://docs.python-requests.org
