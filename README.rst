@@ -54,6 +54,14 @@ Alternatively, your program can read the credentials from an .edgerc file.
 Installation
 ------------
 
+Pre-requisite
+-------------
+If you are installing on a Linux based distribution, you will need to instal the developer libraries for python, ssl and a ffi. On Ubuntu based systems, you will need to do the following:
+
+.. code-block:: bash
+    $ sudo apt-get install ibssl-dev libffi-dev python-dev 
+
+
 To install from pip:
 
 .. code-block:: bash
