@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 class EdgeRc(ConfigParser):
     def __init__(self, filename):
-        ConfigParser.__init__(self, {'client_token': '', 'client_secret':'', 'host':'', 'access_token':'','max_body': '131072', 'headers_to_sign': None})
+        ConfigParser.__init__(self, {'client_token': '', 'client_secret':'', 'host':'', 'access_token':'','max_body': '131072', 'headers_to_sign': 'None'})
         logger.debug("loading edgerc from %s", filename)
 
         self.read(filename)
