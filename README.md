@@ -65,4 +65,4 @@ C.w.w
 3__^%<6.0.9>call:to_go.1.2.2.23
 
 <georgemwasafi@gmail.com>founder contact.
-<htpps:www.github.georgemakulu.github.found.
+<htpps:www.github.com/georgemakulu/founder
