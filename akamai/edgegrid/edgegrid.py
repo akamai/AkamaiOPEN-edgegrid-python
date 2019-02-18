@@ -28,6 +28,7 @@ import hmac
 import base64
 import re
 import sys
+import os
 from requests.auth import AuthBase
 from time import gmtime, strftime
 
@@ -159,6 +160,22 @@ class EdgeGridAuth(AuthBase):
         logger.debug("content hash is '%s'", content_hash)
         return content_hash
 
+    def get_header_versions(self, header=None):
+        if header is None:
+            header = {}
+
+        akamai_cli = os.getenv('AKAMAI_CLI')
+        akamai_cli_version = os.getenv('AKAMAI_CLI_VERSION')
+        if akamai_cli and akamai_cli_version:
+            header['User-Agent'] += " AkamaiCLI/" + akamai_cli_version
+
+        akamai_cli_command = os.getenv('AKAMAI_CLI_COMMAND')
+        akamai_cli_command_version = os.getenv('AKAMAI_CLI_COMMAND_VERSION')
+        if akamai_cli_command and akamai_cli_command_version:
+            header['User-Agent'] += " AkamaiCLI-" + akamai_cli_command + "/" + akamai_cli_command_version
+
+        return header
+
     def make_data_to_sign(self, r, auth_header):
         parsed_url = urlparse(r.url)
 
@@ -166,6 +183,8 @@ class EdgeGridAuth(AuthBase):
             netloc = r.headers['Host']
         else:
             netloc = parsed_url.netloc
+
+        self.get_header_versions(r.headers)
 
         data_to_sign = '\t'.join([
             r.method,
