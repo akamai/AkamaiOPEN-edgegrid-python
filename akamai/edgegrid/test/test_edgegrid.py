@@ -145,6 +145,42 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'headers')
         self.assertEqual(auth.headers_to_sign, ['x-mything1', 'x-mything2'])
 
+    def test_get_header_versions(self):
+        auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'), 'headers')
+        header = auth.get_header_versions()
+        self.assertFalse('user-agent' in header)
+
+        header = auth.get_header_versions({'User-Agent': 'testvalue'})
+        self.assertTrue('User-Agent' in header)
+
+        os.environ["AKAMAI_CLI"] = '1.0.0'
+        os.environ["AKAMAI_CLI_VERSION"] = '1.0.0'
+
+        header = auth.get_header_versions()
+        self.assertTrue('User-Agent' in header)
+        self.assertEqual(header['User-Agent'], ' AkamaiCLI/1.0.0')
+
+        os.environ["AKAMAI_CLI_COMMAND"] = '1.0.0'
+        os.environ["AKAMAI_CLI_COMMAND_VERSION"] = '1.0.0'
+
+        header = auth.get_header_versions()
+        self.assertTrue('User-Agent' in header)
+        self.assertEqual(header['User-Agent'], ' AkamaiCLI/1.0.0 AkamaiCLI-1.0.0/1.0.0')
+
+        header = auth.get_header_versions({'User-Agent': 'testvalue'})
+        self.assertTrue('User-Agent' in header)
+        self.assertEqual(header['User-Agent'], 'testvalue AkamaiCLI/1.0.0 AkamaiCLI-1.0.0/1.0.0')
+
+        del os.environ['AKAMAI_CLI']
+        del os.environ['AKAMAI_CLI_VERSION']
+        del os.environ['AKAMAI_CLI_COMMAND']
+        del os.environ['AKAMAI_CLI_COMMAND_VERSION']
+
+        self.assertFalse('AKAMAI_CLI' in os.environ)
+        self.assertFalse('AKAMAI_CLI_VERSION' in os.environ)
+        self.assertFalse('AKAMAI_CLI_COMMAND' in os.environ)
+        self.assertFalse('AKAMAI_CLI_COMMAND_VERSION' in os.environ)
+
     def test_edgerc_from_object(self):
         auth = EdgeGridAuth.from_edgerc(EdgeRc(os.path.join(mydir, 'sample_edgerc')))
         self.assertEqual(auth.client_token, 'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
@@ -214,6 +250,7 @@ def suite():
     suite.addTest(EGSimpleTest('test_edgerc_broken'))
     suite.addTest(EGSimpleTest('test_edgerc_unparseable'))
     suite.addTest(EGSimpleTest('test_edgerc_headers'))
+    suite.addTest(EGSimpleTest('test_get_header_versions'))
     suite.addTest(EGSimpleTest('test_edgerc_from_object'))
 
     return suite

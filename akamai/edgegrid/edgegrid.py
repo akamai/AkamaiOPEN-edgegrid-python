@@ -164,15 +164,22 @@ class EdgeGridAuth(AuthBase):
         if header is None:
             header = {}
 
+        version_header = ''
         akamai_cli = os.getenv('AKAMAI_CLI')
         akamai_cli_version = os.getenv('AKAMAI_CLI_VERSION')
         if akamai_cli and akamai_cli_version:
-            header['User-Agent'] += " AkamaiCLI/" + akamai_cli_version
+            version_header += " AkamaiCLI/" + akamai_cli_version
 
         akamai_cli_command = os.getenv('AKAMAI_CLI_COMMAND')
         akamai_cli_command_version = os.getenv('AKAMAI_CLI_COMMAND_VERSION')
         if akamai_cli_command and akamai_cli_command_version:
-            header['User-Agent'] += " AkamaiCLI-" + akamai_cli_command + "/" + akamai_cli_command_version
+            version_header += " AkamaiCLI-" + akamai_cli_command + "/" + akamai_cli_command_version
+
+        if version_header != '':
+            if 'User-Agent' not in header:
+                header['User-Agent'] = version_header
+            else:
+                header['User-Agent'] += version_header
 
         return header
 
