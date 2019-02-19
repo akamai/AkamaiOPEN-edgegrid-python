@@ -177,7 +177,7 @@ class EdgeGridAuth(AuthBase):
 
         if version_header != '':
             if 'User-Agent' not in header:
-                header['User-Agent'] = version_header
+                header['User-Agent'] = version_header.strip()
             else:
                 header['User-Agent'] += version_header
 
