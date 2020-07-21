@@ -32,8 +32,10 @@ Alternatively, your program can read the credentials from an .edgerc file.
     >>> import requests
     >>> from akamai.edgegrid import EdgeGridAuth, EdgeRc
     >>> from urlparse import urljoin
+    >>> from pathlib import Path
 
-    >>> edgerc = EdgeRc('~/.edgerc')
+    >>> edgerc_location = '{}/.edgerc'.format(str(Path.home()))
+    >>> edgerc = EdgeRc(edgerc_location)
     >>> section = 'default'
     >>> baseurl = 'https://%s' % edgerc.get(section, 'host')
 
