@@ -198,7 +198,7 @@ class EdgeGridAuth(AuthBase):
             parsed_url.scheme,
             netloc,
             # Note: relative URL constraints are handled by requests when it sets up 'r'
-            parsed_url.path + ('?' + parsed_url.query if parsed_url.query else ""),
+            parsed_url.path + (';' + parsed_url.params if parsed_url.params else "") + ('?' + parsed_url.query if parsed_url.query else ""),
             self.canonicalize_headers(r),
             self.make_content_hash(r),
             auth_header
