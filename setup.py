@@ -16,5 +16,8 @@ setup(
         'pyasn1',
         'urllib3'
     ],
-    license='LICENSE.txt'
+    classifiers=[
+        'License :: OSI Approved :: Apache Software License',
+    ]
+    license='Apache 2.0'
 )
