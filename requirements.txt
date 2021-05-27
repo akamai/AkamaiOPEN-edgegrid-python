@@ -1,5 +1,5 @@
 requests>=2.3.0
-pyopenssl
+pyopenssl>=19.0.0
 ndg-httpsclient
 pyasn1
 urllib3
