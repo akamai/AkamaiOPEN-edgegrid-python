@@ -18,6 +18,7 @@
 
 import logging
 import sys
+from os.path import expanduser
 
 if sys.version_info[0] >= 3:
     # python3
@@ -34,7 +35,7 @@ class EdgeRc(ConfigParser):
         ConfigParser.__init__(self, {'client_token': '', 'client_secret':'', 'host':'', 'access_token':'','max_body': '131072', 'headers_to_sign': 'None'})
         logger.debug("loading edgerc from %s", filename)
 
-        self.read(filename)
+        self.read(expanduser(filename))
 
         logger.debug("successfully loaded edgerc")
 
