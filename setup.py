@@ -5,6 +5,8 @@ setup(
     description='{OPEN} client authentication protocol for python-requests',
     author='Jonathan Landis',
     author_email='jlandis@akamai.com',
+    maintainer='Akamai Developer Experience team',
+    maintainer_email='dl-devexp-eng@akamai.com',
     url='https://github.com/akamai-open/AkamaiOPEN-edgegrid-python',
     namespace_packages=['akamai'],
     packages=find_packages(),

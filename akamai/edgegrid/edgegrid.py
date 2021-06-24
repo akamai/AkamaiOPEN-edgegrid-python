@@ -3,6 +3,7 @@
 # EdgeGrid requests Auth handler
 #
 # Original author: Jonathan Landis <jlandis@akamai.com>
+# Package maintainer: Akamai Developer Experience team <dl-devexp-eng@akamai.com>
 #
 # For more information visit https://developer.akamai.com
 

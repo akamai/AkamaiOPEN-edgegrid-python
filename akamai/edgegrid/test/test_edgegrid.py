@@ -2,6 +2,7 @@
 # unit tests for edgegrid. runs tests from testdata.json
 #
 # Original author: Jonathan Landis <jlandis@akamai.com>
+# Package maintainer: Akamai Developer Experience team <dl-devexp-eng@akamai.com>
 #
 # For more information visit https://developer.akamai.com
 
