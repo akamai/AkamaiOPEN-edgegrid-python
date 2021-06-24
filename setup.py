@@ -9,12 +9,17 @@ setup(
     namespace_packages=['akamai'],
     packages=find_packages(),
     python_requires=">=2.7.10",
-    install_requires = [
+    install_requires=[
         'requests>=2.3.0',
-        'pyOpenSSL >= 0.13',
+        'pyOpenSSL>=19.0.0',
         'ndg-httpsclient',
         'pyasn1',
         'urllib3'
     ],
-    license='LICENSE.txt'
+    license='Apache 2.0',
+    classifiers=[
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+    ]
 )
