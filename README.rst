@@ -102,6 +102,14 @@ For Python 3.3 or newer, replace the `virtualenv` module with `venv`. Run:
     $ pip install -r requirements.txt
     $ python -m unittest discover
 
+Creating your own .edgerc
+----------
+
+#. Copy the `akamai/edgegrid/test/sample_edgerc` file to your home directory and rename as .edgerc.
+#. Edit the copied file and provide your own credentials. For more information on creating an .edgerc file, see `Get started  with APIs`_.
+
+.. _`Get started  with APIs`: https://developer.akamai.com/api/getting-started#edgercfile
+
 Contribute
 ----------
 
