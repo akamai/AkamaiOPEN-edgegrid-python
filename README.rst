@@ -31,7 +31,7 @@ Alternatively, your program can read the credentials from an .edgerc file.
 
     >>> import requests
     >>> from akamai.edgegrid import EdgeGridAuth, EdgeRc
-    >>> from urlparse import urljoin
+    >>> from urllib.parse import urljoin
 
     >>> edgerc = EdgeRc('~/.edgerc')
     >>> section = 'default'
@@ -46,6 +46,12 @@ Alternatively, your program can read the credentials from an .edgerc file.
     >>> result.json()['locations'][0]['value']
     Oakbrook, IL, United States
     ...
+
+If you intend to run the above examples with Python 2.7, remember that urljoin is contained in a different package:
+
+.. code-block:: pycon
+
+    >>> from urlparse import urljoin
 
 .. _`requests`: http://docs.python-requests.org
 .. _`Akamai {OPEN} Edgegrid authentication`: https://developer.akamai.com/introduction/Client_Auth.html
