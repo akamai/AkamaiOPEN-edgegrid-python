@@ -3,6 +3,17 @@
 History
 -------
 
+1.2.0 (2021-08-10)
+++++++++++++++++++
+
+* Bug fixes
+    - `GH#48 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/48>`_ and `GH#50 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/50>`_ issues: recognize the `~` tilde character as home directory alias
+    - `GH#36 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/36>`_, `GH#44 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/44>`_ and `GH#53 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/53>`_ issues: add missing test resource files to PyPI package
+    - `GH#41 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/41>`_: require PyOpenSSL >= v19.0.0 to avoid old OS packages
+
+* Improvements
+    - better Python 2 and Python 3 documentation and related setup.py tags
+
 1.1.0 (2017-09-11)
 ++++++++++++++++++
 

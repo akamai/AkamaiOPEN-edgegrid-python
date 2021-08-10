@@ -3,11 +3,12 @@
 # EdgeGrid requests Auth handler
 #
 # Original author: Jonathan Landis <jlandis@akamai.com>
+# Package maintainer: Akamai Developer Experience team <dl-devexp-eng@akamai.com>
 #
 # For more information visit https://developer.akamai.com
 
-# Copyright 2014 Akamai Technologies, Inc. All Rights Reserved
-# 
+# Copyright 2021 Akamai Technologies, Inc. All Rights Reserved
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,7 +21,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import requests
 import logging
 import uuid
 import hashlib
@@ -34,32 +34,40 @@ from time import gmtime, strftime
 
 if sys.version_info[0] >= 3:
     # python3
-    from urllib.parse import urlparse, parse_qsl, urlunparse
+    from urllib.parse import urlparse
 else:
     # python2.7
-    from urlparse import urlparse, parse_qsl, urlunparse
+    from urlparse import urlparse
     import urllib3.contrib.pyopenssl
     urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 logger = logging.getLogger(__name__)
 
-__all__=['EdgeGridAuth']
+__all__ = ['EdgeGridAuth']
+
 
 def eg_timestamp():
     return strftime('%Y%m%dT%H:%M:%S+0000', gmtime())
 
+
 def new_nonce():
     return uuid.uuid4()
 
+
 def base64_hmac_sha256(data, key):
     return base64.b64encode(
-        hmac.new(key.encode('utf8'), data.encode('utf8'), hashlib.sha256).digest()
+        hmac.new(
+            key.encode('utf8'),
+            data.encode('utf8'),
+            hashlib.sha256).digest()
     ).decode('utf8')
+
 
 def base64_sha256(data):
     if isinstance(data, str):
         data = data.encode('utf8')
     return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
+
 
 class EdgeGridAuth(AuthBase):
     """A Requests authentication handler that provides Akamai {OPEN} EdgeGrid support.
@@ -76,15 +84,15 @@ class EdgeGridAuth(AuthBase):
 
     """
 
-    def __init__(self, client_token, client_secret, access_token, 
+    def __init__(self, client_token, client_secret, access_token,
                  headers_to_sign=None, max_body=131072):
-        """Initialize authentication using the given parameters from the Luna Manage APIs
+        """Initialize authentication using the given parameters from the Akamai OPEN APIs
            Interface:
 
         :param client_token: Client token provided by "Credentials" ui
         :param client_secret: Client secret provided by "Credentials" ui
         :param access_token: Access token provided by "Authorizations" ui
-        :param headers_to_sign: An ordered list header names that will be included in 
+        :param headers_to_sign: An ordered list header names that will be included in
             the signature.  This will be provided by specific APIs. (default [])
         :param max_body: Maximum content body size for POST requests. This will be provided by
             specific APIs. (default 131072)
@@ -94,7 +102,7 @@ class EdgeGridAuth(AuthBase):
         self.client_secret = client_secret
         self.access_token = access_token
         if headers_to_sign:
-            self.headers_to_sign = [ h.lower() for h in headers_to_sign ]
+            self.headers_to_sign = [h.lower() for h in headers_to_sign]
         else:
             self.headers_to_sign = []
         self.max_body = max_body
@@ -103,15 +111,15 @@ class EdgeGridAuth(AuthBase):
 
     @staticmethod
     def from_edgerc(rcinput, section='default'):
-        """Returns an EdgeGridAuth object from the configuration from the given section of the 
+        """Returns an EdgeGridAuth object from the configuration from the given section of the
            given edgerc file.
 
-        :param filename: path to the edgerc file
-        :param section: the section to use (this is the [bracketed] part of the edgerc, 
+        :param rcinput: EdgeRc instance or path to the edgerc file
+        :param section: the section to use (this is the [bracketed] part of the edgerc,
             default is 'default')
 
         """
-        from .edgerc import EdgeRc 
+        from .edgerc import EdgeRc
         if isinstance(rcinput, EdgeRc):
             rc = rcinput
         else:
@@ -149,11 +157,13 @@ class EdgeGridAuth(AuthBase):
             logger.debug("signing content: %s", prepared_body)
             if len(prepared_body) > self.max_body:
                 logger.debug(
-                    "data length %d is larger than maximum %d", 
+                    "data length %d is larger than maximum %d",
                     len(prepared_body), self.max_body
                 )
                 prepared_body = prepared_body[0:self.max_body]
-                logger.debug("data truncated to %d for computing the hash", len(prepared_body))
+                logger.debug(
+                    "data truncated to %d for computing the hash",
+                    len(prepared_body))
 
             content_hash = base64_sha256(prepared_body)
 
@@ -173,7 +183,8 @@ class EdgeGridAuth(AuthBase):
         akamai_cli_command = os.getenv('AKAMAI_CLI_COMMAND')
         akamai_cli_command_version = os.getenv('AKAMAI_CLI_COMMAND_VERSION')
         if akamai_cli_command and akamai_cli_command_version:
-            version_header += " AkamaiCLI-" + akamai_cli_command + "/" + akamai_cli_command_version
+            version_header += " AkamaiCLI-" + akamai_cli_command + \
+                "/" + akamai_cli_command_version
 
         if version_header != '':
             if 'User-Agent' not in header:
@@ -186,7 +197,7 @@ class EdgeGridAuth(AuthBase):
     def make_data_to_sign(self, r, auth_header):
         parsed_url = urlparse(r.url)
 
-        if (r.headers.get('Host', False)):
+        if r.headers.get('Host', False):
             netloc = r.headers['Host']
         else:
             netloc = parsed_url.netloc
@@ -197,8 +208,10 @@ class EdgeGridAuth(AuthBase):
             r.method,
             parsed_url.scheme,
             netloc,
-            # Note: relative URL constraints are handled by requests when it sets up 'r'
-            parsed_url.path + ('?' + parsed_url.query if parsed_url.query else ""),
+            # Note: relative URL constraints are handled by requests when it
+            # sets up 'r'
+            parsed_url.path + \
+            ('?' + parsed_url.query if parsed_url.query else ""),
             self.canonicalize_headers(r),
             self.make_content_hash(r),
             auth_header
@@ -208,7 +221,7 @@ class EdgeGridAuth(AuthBase):
 
     def sign_request(self, r, timestamp, auth_header):
         return base64_hmac_sha256(
-            self.make_data_to_sign(r, auth_header), 
+            self.make_data_to_sign(r, auth_header),
             self.make_signing_key(timestamp)
         )
 
@@ -219,7 +232,8 @@ class EdgeGridAuth(AuthBase):
             ('timestamp', timestamp),
             ('nonce', nonce),
         ]
-        auth_header = "EG1-HMAC-SHA256 " + ';'.join([ "%s=%s" % kvp for kvp in kvps ]) + ';'
+        auth_header = "EG1-HMAC-SHA256 " + \
+            ';'.join(["%s=%s" % kvp for kvp in kvps]) + ';'
         logger.debug('unsigned authorization header: %s', auth_header)
 
         signed_auth_header = auth_header + \

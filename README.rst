@@ -9,7 +9,7 @@ visit the `Akamai {OPEN} Developer Community`_.
 
     >>> import requests
     >>> from akamai.edgegrid import EdgeGridAuth
-    >>> from urlparse import urljoin
+    >>> from urllib.parse import urljoin
     >>> baseurl = 'https://akaa-WWWWWWWWWWWW.luna.akamaiapis.net/'
     >>> s = requests.Session()
     >>> s.auth = EdgeGridAuth(
@@ -31,7 +31,7 @@ Alternatively, your program can read the credentials from an .edgerc file.
 
     >>> import requests
     >>> from akamai.edgegrid import EdgeGridAuth, EdgeRc
-    >>> from urlparse import urljoin
+    >>> from urllib.parse import urljoin
 
     >>> edgerc = EdgeRc('~/.edgerc')
     >>> section = 'default'
@@ -47,6 +47,12 @@ Alternatively, your program can read the credentials from an .edgerc file.
     Oakbrook, IL, United States
     ...
 
+If you intend to run the above examples with Python 2.7, remember that urljoin is contained in a different package:
+
+.. code-block:: pycon
+
+    >>> from urlparse import urljoin
+
 .. _`requests`: http://docs.python-requests.org
 .. _`Akamai {OPEN} Edgegrid authentication`: https://developer.akamai.com/introduction/Client_Auth.html
 .. _`Akamai {OPEN} Developer Community`: https://developer.akamai.com
@@ -54,27 +60,37 @@ Alternatively, your program can read the credentials from an .edgerc file.
 Installation
 ------------
 
-Pre-requisite
--------------
-If you are installing on a Linux based distribution, you will need to install the developer libraries for python, ssl and a ffi. On Ubuntu based systems, you will need to do the following:
+**Prerequisite**
+
+For Linux-based distribution, install the developer libraries for Python, SSL and FFI. For example, on Debian-based systems, run:
 
 .. code-block:: bash
-    $ sudo apt-get install ibssl-dev libffi-dev python-dev 
 
+    $ sudo apt-get install ibssl-dev libffi-dev python-dev
 
-To install from pip:
+**To install from pip**
+
+If you are planning to use Python 2, upgrade pip to version 20.3.4, which is the most recent and last version that supports Python 2. Run:"
+
+.. code-block:: bash
+
+	$ pip install --upgrade 'pip<21.0'
+
+To proceed with the installation:
 
 .. code-block:: bash
 
     $ pip install edgegrid-python
 
-To install from sources:
+**To install from sources**
 
 .. code-block:: bash
 
     $ python setup.py install
 
-To run tests:
+**To run tests**
+
+Both Python 2 and Python 3 are supported. This example uses Python 2.7. Run:
 
 .. code-block:: bash
 
@@ -82,6 +98,23 @@ To run tests:
     $ . venv/bin/activate
     $ pip install -r requirements.txt
     $ python -m unittest discover
+
+For Python 3.3 or newer, replace the `virtualenv` module with `venv`. Run:
+
+.. code-block:: bash
+
+    $ python3 -m venv venv
+    $ . venv/bin/activate
+    $ pip install -r requirements.txt
+    $ python -m unittest discover
+
+Creating your own .edgerc
+----------
+
+#. Copy the `akamai/edgegrid/test/sample_edgerc` file to your home directory and rename as `.edgerc`.
+#. Edit the copied file and provide your own credentials. For more information on creating an `.edgerc` file, see `Get started  with APIs`_.
+
+.. _`Get started  with APIs`: https://developer.akamai.com/api/getting-started#edgercfile
 
 Contribute
 ----------
@@ -100,7 +133,7 @@ Jonathan Landis
 License
 -------
 
-   Copyright 2015 Akamai Technologies, Inc. All rights reserved. 
+   Copyright 2021 Akamai Technologies, Inc. All rights reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
