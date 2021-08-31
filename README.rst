@@ -74,7 +74,7 @@ If you are planning to use Python 2, upgrade pip to version 20.3.4, which is the
 
 .. code-block:: bash
 
-	$ pip install --upgrade 'pip<21.0'
+    $ pip install --upgrade 'pip<21.0'
 
 To proceed with the installation:
 
