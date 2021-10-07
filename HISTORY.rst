@@ -3,8 +3,8 @@
 History
 -------
 
-1.2.1 (2021-09-02)
-+++++++++
+1.2.1 (2021-10-11)
+++++++++++++++++++
 
 * Bug fixes
     - `GH#36 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/36>`_, `GH#44 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/44>`_ and `GH#53 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/53>`_ issues: split `MANIFEST.in` in several lines to properly include in Python package all necessary resource files
