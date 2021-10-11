@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='edgegrid-python', 
-    version='1.2.0', 
+    version='1.2.1',
     description='{OPEN} client authentication protocol for python-requests',
     author='Jonathan Landis',
     author_email='jlandis@akamai.com',
@@ -18,6 +18,7 @@ setup(
         'pyasn1',
         'urllib3'
     ],
+    include_package_data=True,
     license='Apache 2.0',
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
