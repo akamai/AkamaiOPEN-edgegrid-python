@@ -1,1 +1,6 @@
-include README.rst LICENSE requirements.txt akamai/edgegrid/test/testdata.json akamai/edgegrid/test/sample_edgerc akamai/edgegrid/test/edgerc_that_doesnt_parse
+include README.rst
+include LICENSE
+include requirements.txt
+include akamai/edgegrid/test/testdata.json
+include akamai/edgegrid/test/sample_edgerc
+include akamai/edgegrid/test/edgerc_that_doesnt_parse

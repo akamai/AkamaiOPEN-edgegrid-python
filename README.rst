@@ -70,13 +70,15 @@ For Linux-based distribution, install the developer libraries for Python, SSL an
 
 **To install from pip**
 
-If you are planning to use Python 2, upgrade pip to version 20.3.4, which is the most recent and last version that supports Python 2. Run:"
+We recommend using any recent Python 3 distribution. Starting from version 3.4 of the cryptography package, Python 2.7 is no longer supported.
+
+If you still want to use Python 2.7, first run:
 
 .. code-block:: bash
 
-	$ pip install --upgrade 'pip<21.0'
+    $ pip install --upgrade 'cryptography<3.4'
 
-To proceed with the installation:
+To continue with the installation:
 
 .. code-block:: bash
 
@@ -96,6 +98,7 @@ Both Python 2 and Python 3 are supported. This example uses Python 2.7. Run:
 
     $ virtualenv -p python2.7 venv
     $ . venv/bin/activate
+    $ pip install 'cryptography<3.4' # just necessary for Python 2.7
     $ pip install -r requirements.txt
     $ python -m unittest discover
 
