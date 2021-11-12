@@ -38,6 +38,8 @@ class EdgeRc(ConfigParser):
                                'client_secret': '',
                                'host': '',
                                'access_token': '',
+                               'proxy_to': '',
+                               'proxy_prefix': '',
                                'max_body': '131072',
                                'headers_to_sign': 'None'})
         logger.debug("loading edgerc from %s", filename)
