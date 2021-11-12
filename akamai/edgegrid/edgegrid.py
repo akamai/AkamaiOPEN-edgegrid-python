@@ -84,7 +84,7 @@ class EdgeGridAuth(AuthBase):
 
     """
 
-    def __init__(self, client_token, client_secret, access_token,
+    def __init__(self, client_token, client_secret, access_token, proxy_to, proxy_prefix,
                  headers_to_sign=None, max_body=131072):
         """Initialize authentication using the given parameters from the Akamai OPEN APIs
            Interface:
@@ -92,6 +92,8 @@ class EdgeGridAuth(AuthBase):
         :param client_token: Client token provided by "Credentials" ui
         :param client_secret: Client secret provided by "Credentials" ui
         :param access_token: Access token provided by "Authorizations" ui
+        :param proxy_to: If configured to work behind reverse proxy, this parameter contains the hostname of the actual API end point
+        :param proxy_prefix: If configured to work behind reverse proxy, this parameter contains the prefix of URL passed to the API end point
         :param headers_to_sign: An ordered list header names that will be included in
             the signature.  This will be provided by specific APIs. (default [])
         :param max_body: Maximum content body size for POST requests. This will be provided by
@@ -101,6 +103,8 @@ class EdgeGridAuth(AuthBase):
         self.client_token = client_token
         self.client_secret = client_secret
         self.access_token = access_token
+        self.proxy_to = proxy_to
+        self.proxy_prefix = proxy_prefix
         if headers_to_sign:
             self.headers_to_sign = [h.lower() for h in headers_to_sign]
         else:
@@ -129,6 +133,8 @@ class EdgeGridAuth(AuthBase):
             client_token=rc.get(section, 'client_token'),
             client_secret=rc.get(section, 'client_secret'),
             access_token=rc.get(section, 'access_token'),
+            proxy_to=rc.get(section, 'proxy_to'),
+            proxy_prefix=rc.get(section, 'proxy_prefix'),
             headers_to_sign=rc.getlist(section, 'headers_to_sign'),
             max_body=rc.getint(section, 'max_body')
         )
@@ -196,8 +202,10 @@ class EdgeGridAuth(AuthBase):
 
     def make_data_to_sign(self, r, auth_header):
         parsed_url = urlparse(r.url)
-
-        if r.headers.get('Host', False):
+        
+        if len(self.proxy_to):
+            netloc = self.proxy_to[0]
+        elif r.headers.get('Host', False):
             netloc = r.headers['Host']
         else:
             netloc = parsed_url.netloc
@@ -210,7 +218,7 @@ class EdgeGridAuth(AuthBase):
             netloc,
             # Note: relative URL constraints are handled by requests when it
             # sets up 'r'
-            parsed_url.path + \
+            parsed_url.path[parsed_url.path.startswith(self.proxy_prefix[0]) and len(self.proxy_prefix[0]):] + \
             ('?' + parsed_url.query if parsed_url.query else ""),
             self.canonicalize_headers(r),
             self.make_content_hash(r),
