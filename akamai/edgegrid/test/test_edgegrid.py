@@ -80,7 +80,7 @@ class EdgeGridTest(unittest.TestCase):
         try:
             r = request.prepare(
                 )
-            auth_header = auth.make_auth_header(
+            auth_header = auth.ah.make_auth_header(
                 r.url, r.headers, r.method, r.body, self.testdata['timestamp'],
                 self.testdata['nonce']
             )
@@ -125,34 +125,34 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth(
             client_token='xxx', client_secret='xxx', access_token='xxx'
         )
-        self.assertEqual(auth.max_body, 131072)
-        self.assertEqual(auth.headers_to_sign, [])
+        self.assertEqual(auth.ah.max_body, 131072)
+        self.assertEqual(auth.ah.headers_to_sign, [])
 
     def test_edgerc_default(self):
         auth = EdgeGridAuth.from_edgerc(os.path.join(mydir, 'sample_edgerc'))
         self.assertEqual(
-            auth.client_token,
+            auth.ah.client_token,
             'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
         self.assertEqual(
-            auth.client_secret,
+            auth.ah.client_secret,
             expected_client_secret)
         self.assertEqual(
-            auth.access_token,
+            auth.ah.access_token,
             'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
-        self.assertEqual(auth.max_body, 131072)
-        self.assertEqual(auth.headers_to_sign, ['none'])
+        self.assertEqual(auth.ah.max_body, 131072)
+        self.assertEqual(auth.ah.headers_to_sign, ['none'])
 
     def test_edgerc_broken(self):
         auth = EdgeGridAuth.from_edgerc(
             os.path.join(mydir, 'sample_edgerc'), 'broken')
         self.assertEqual(
-            auth.client_secret,
+            auth.ah.client_secret,
             expected_client_secret)
         self.assertEqual(
-            auth.access_token,
+            auth.ah.access_token,
             'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
-        self.assertEqual(auth.max_body, 128 * 1024)
-        self.assertEqual(auth.headers_to_sign, ['none'])
+        self.assertEqual(auth.ah.max_body, 128 * 1024)
+        self.assertEqual(auth.ah.headers_to_sign, ['none'])
 
     def test_edgerc_unparseable(self):
         # noinspection PyBroadException
@@ -166,15 +166,15 @@ class EGSimpleTest(unittest.TestCase):
     def test_edgerc_headers(self):
         auth = EdgeGridAuth.from_edgerc(
             os.path.join(mydir, 'sample_edgerc'), 'headers')
-        self.assertEqual(auth.headers_to_sign, ['x-mything1', 'x-mything2'])
+        self.assertEqual(auth.ah.headers_to_sign, ['x-mything1', 'x-mything2'])
 
     def test_get_header_versions(self):
         auth = EdgeGridAuth.from_edgerc(
             os.path.join(mydir, 'sample_edgerc'), 'headers')
-        header = auth.get_header_versions()
+        header = auth.ah.get_header_versions()
         self.assertFalse('user-agent' in header)
 
-        header = auth.get_header_versions({'User-Agent': 'testvalue'})
+        header = auth.ah.get_header_versions({'User-Agent': 'testvalue'})
         self.assertTrue('User-Agent' in header)
 
         # setting environment variables with hardcoded `1.0.0` value, just for this test.
@@ -182,23 +182,23 @@ class EGSimpleTest(unittest.TestCase):
         os.environ["AKAMAI_CLI"] = '1.0.0'
         os.environ["AKAMAI_CLI_VERSION"] = '1.0.0'
 
-        header = auth.get_header_versions()
+        header = auth.ah.get_header_versions()
         self.assertTrue('User-Agent' in header)
         self.assertEqual(header['User-Agent'], 'AkamaiCLI/1.0.0')
 
-        header = auth.get_header_versions({'User-Agent': 'test-agent'})
+        header = auth.ah.get_header_versions({'User-Agent': 'test-agent'})
         self.assertTrue('User-Agent' in header)
         self.assertEqual(header['User-Agent'], 'test-agent AkamaiCLI/1.0.0')
 
         os.environ["AKAMAI_CLI_COMMAND"] = '1.0.0'
         os.environ["AKAMAI_CLI_COMMAND_VERSION"] = '1.0.0'
 
-        header = auth.get_header_versions()
+        header = auth.ah.get_header_versions()
         self.assertTrue('User-Agent' in header)
         self.assertEqual(header['User-Agent'],
                          'AkamaiCLI/1.0.0 AkamaiCLI-1.0.0/1.0.0')
 
-        header = auth.get_header_versions({'User-Agent': 'testvalue'})
+        header = auth.ah.get_header_versions({'User-Agent': 'testvalue'})
         self.assertTrue('User-Agent' in header)
         self.assertEqual(
             header['User-Agent'],
@@ -218,21 +218,21 @@ class EGSimpleTest(unittest.TestCase):
         auth = EdgeGridAuth.from_edgerc(
             EdgeRc(os.path.join(mydir, 'sample_edgerc')))
         self.assertEqual(
-            auth.client_token,
+            auth.ah.client_token,
             'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
         self.assertEqual(
-            auth.client_secret,
+            auth.ah.client_secret,
             expected_client_secret)
         self.assertEqual(
-            auth.access_token,
+            auth.ah.access_token,
             'xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx')
-        self.assertEqual(auth.max_body, 131072)
-        self.assertEqual(auth.headers_to_sign, ['none'])
+        self.assertEqual(auth.ah.max_body, 131072)
+        self.assertEqual(auth.ah.headers_to_sign, ['none'])
 
     def test_edgerc_dashes(self):
         auth = EdgeGridAuth.from_edgerc(
             os.path.join(mydir, 'sample_edgerc'), 'dashes')
-        self.assertEqual(auth.max_body, 128 * 1024)
+        self.assertEqual(auth.ah.max_body, 128 * 1024)
 
 
 class JsonTest(unittest.TestCase):
@@ -265,7 +265,7 @@ class JsonTest(unittest.TestCase):
         )
 
         r = request.prepare()
-        auth_header = auth.make_auth_header(
+        auth_header = auth.ah.make_auth_header(
             r.url, r.headers, r.method, r.body, self.testdata['timestamp'],
             self.testdata['nonce']
         )
