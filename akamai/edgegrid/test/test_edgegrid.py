@@ -78,9 +78,11 @@ class EdgeGridTest(unittest.TestCase):
         )
 
         try:
+            r = request.prepare(
+                )
             auth_header = auth.make_auth_header(
-                request.prepare(
-                ), self.testdata['timestamp'], self.testdata['nonce']
+                r.url, r.headers, r.method, r.body, self.testdata['timestamp'],
+                self.testdata['nonce']
             )
         except Exception as e:
             logger.debug('Got exception from make_auth_header', exc_info=True)
@@ -262,9 +264,10 @@ class JsonTest(unittest.TestCase):
             json=data,
         )
 
+        r = request.prepare()
         auth_header = auth.make_auth_header(
-            request.prepare(
-            ), self.testdata['timestamp'], self.testdata['nonce']
+            r.url, r.headers, r.method, r.body, self.testdata['timestamp'],
+            self.testdata['nonce']
         )
 
         self.assertEqual(auth_header, self.testdata['jsontest_hash'])
