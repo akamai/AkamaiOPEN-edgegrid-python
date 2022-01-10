@@ -45,6 +45,35 @@ logger = logging.getLogger(__name__)
 expected_client_secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx='
 
 
+class AuthHeadersTest(unittest.TestCase):
+    def __init__(self, testdata=None, testcase=None):
+        super(AuthHeadersTest, self).__init__()
+        self.testdata = testdata
+        self.testcase = testcase
+        self.maxDiff = None
+
+    def runTest(self):
+        self.ah = eg.AuthHeaders(
+            client_token=self.testdata['client_token'],
+            client_secret=self.testdata['client_secret'],
+            access_token=self.testdata['access_token'],
+            headers_to_sign=self.testdata['headers_to_sign'],
+            max_body=self.testdata['max_body']
+        )
+
+        sign_key = self.ah.make_signing_key(self.testdata['timestamp'])
+        self.assertEqual(sign_key, self.testdata["sign_key_test"])
+
+        content_hash = self.ah.make_content_hash(
+            body="test_body",
+            method="POST"
+        )
+        self.assertEqual(content_hash, self.testdata["content_hash_test"])
+
+        header = self.ah.get_header_versions()
+        self.assertEqual(header, {})
+
+
 class EdgeGridTest(unittest.TestCase):
     def __init__(self, testdata=None, testcase=None):
         super(EdgeGridTest, self).__init__()
@@ -283,6 +312,7 @@ def suite():
 
     for test in tests:
         suite.addTest(EdgeGridTest(testdata, test))
+        suite.addTest(AuthHeadersTest(testdata, test))
 
     suite.addTest(JsonTest(testdata))
 
