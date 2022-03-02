@@ -69,7 +69,7 @@ def base64_sha256(data):
     return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
 
 
-class AuthHeaders():
+class EdgeGridAuthHeaders():
 
     def __init__(self, client_token, client_secret, access_token,
                  headers_to_sign=None, max_body=131072):
@@ -222,7 +222,7 @@ class EdgeGridAuth(AuthBase):
             specific APIs. (default 131072)
 
         """
-        self.ah = AuthHeaders(
+        self.ah = EdgeGridAuthHeaders(
             client_token,
             client_secret,
             access_token,

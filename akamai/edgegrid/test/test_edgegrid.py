@@ -45,15 +45,15 @@ logger = logging.getLogger(__name__)
 expected_client_secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx='
 
 
-class AuthHeadersTest(unittest.TestCase):
+class EdgeGridAuthHeadersTest(unittest.TestCase):
     def __init__(self, testdata=None, testcase=None):
-        super(AuthHeadersTest, self).__init__()
+        super(EdgeGridAuthHeadersTest, self).__init__()
         self.testdata = testdata
         self.testcase = testcase
         self.maxDiff = None
 
     def runTest(self):
-        self.ah = eg.AuthHeaders(
+        self.ah = eg.EdgeGridAuthHeaders(
             client_token=self.testdata['client_token'],
             client_secret=self.testdata['client_secret'],
             access_token=self.testdata['access_token'],
@@ -312,7 +312,7 @@ def suite():
 
     for test in tests:
         suite.addTest(EdgeGridTest(testdata, test))
-        suite.addTest(AuthHeadersTest(testdata, test))
+        suite.addTest(EdgeGridAuthHeadersTest(testdata, test))
 
     suite.addTest(JsonTest(testdata))
 
