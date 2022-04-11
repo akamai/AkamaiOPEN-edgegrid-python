@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # EdgeGrid requests Auth handler
 #
 # Original author: Jonathan Landis <jlandis@akamai.com>
