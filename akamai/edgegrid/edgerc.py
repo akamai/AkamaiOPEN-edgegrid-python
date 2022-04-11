@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # support for .edgerc file format
 #
 # Copyright 2021 Akamai Technologies, Inc. All Rights Reserved
