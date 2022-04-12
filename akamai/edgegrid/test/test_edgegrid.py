@@ -107,8 +107,7 @@ class EdgeGridTest(unittest.TestCase):
         )
 
         try:
-            r = request.prepare(
-                )
+            r = request.prepare()
             auth_header = auth.ah.make_auth_header(
                 r.url, r.headers, r.method, r.body, self.testdata['timestamp'],
                 self.testdata['nonce']

@@ -85,7 +85,7 @@ class EdgeGridAuth(AuthBase):
     """
 
     def __init__(self, client_token, client_secret, access_token,
-                 headers_to_sign=None, max_body=131072):
+                 headers_to_sign=(), max_body=131072):
         """Initialize authentication using the given parameters from the Akamai OPEN APIs
            Interface:
 
@@ -167,14 +167,11 @@ class EdgeGridAuth(AuthBase):
 class EdgeGridAuthHeaders():
 
     def __init__(self, client_token, client_secret, access_token,
-                 headers_to_sign=None, max_body=131072):
+                 headers_to_sign=(), max_body=131072):
         self.client_token = client_token
         self.client_secret = client_secret
         self.access_token = access_token
-        if headers_to_sign:
-            self.headers_to_sign = [h.lower() for h in headers_to_sign]
-        else:
-            self.headers_to_sign = []
+        self.headers_to_sign = [h.lower() for h in headers_to_sign]
         self.max_body = max_body
 
     def make_signing_key(self, timestamp):
