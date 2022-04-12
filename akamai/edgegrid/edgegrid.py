@@ -69,6 +69,101 @@ def base64_sha256(data):
     return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
 
 
+class EdgeGridAuth(AuthBase):
+    """A Requests authentication handler that provides Akamai {OPEN} EdgeGrid support.
+
+    Basic Usage::
+        >>> import requests
+        >>> from akamai.edgegrid import EdgeGridAuth
+        >>> s = requests.Session()
+        >>> s.auth = EdgeGridAuth(
+            client_token='cccccccccccccccccc',
+            client_secret='sssssssssssssssss',
+            access_token='aaaaaaaaaaaaaaaaa'
+        )
+
+    """
+
+    def __init__(self, client_token, client_secret, access_token,
+                 headers_to_sign=None, max_body=131072):
+        """Initialize authentication using the given parameters from the Akamai OPEN APIs
+           Interface:
+
+        :param client_token: Client token provided by "Credentials" ui
+        :param client_secret: Client secret provided by "Credentials" ui
+        :param access_token: Access token provided by "Authorizations" ui
+        :param headers_to_sign: An ordered list header names that will be included in
+            the signature.  This will be provided by specific APIs. (default [])
+        :param max_body: Maximum content body size for POST requests. This will be provided by
+            specific APIs. (default 131072)
+
+        """
+        self.ah = EdgeGridAuthHeaders(
+            client_token,
+            client_secret,
+            access_token,
+            headers_to_sign,
+            max_body
+        )
+
+    @staticmethod
+    def from_edgerc(rcinput, section='default'):
+        """
+        Returns an EdgeGridAuth object from the configuration from the given section
+        of the given edgerc file.
+
+        :param rcinput: EdgeRc instance or path to the edgerc file
+        :param section: the section to use (this is the [bracketed] part of the edgerc,
+            default is 'default')
+
+        """
+        from .edgerc import EdgeRc
+        if isinstance(rcinput, EdgeRc):
+            rc = rcinput
+        else:
+            rc = EdgeRc(rcinput)
+
+        return EdgeGridAuth(
+            client_token=rc.get(section, 'client_token'),
+            client_secret=rc.get(section, 'client_secret'),
+            access_token=rc.get(section, 'access_token'),
+            headers_to_sign=rc.getlist(section, 'headers_to_sign'),
+            max_body=rc.getint(section, 'max_body')
+        )
+
+    def handle_redirect(self, res, **kwargs):
+        if res.is_redirect:
+            redirect_location = res.headers['location']
+
+            logger.debug("signing the redirected url: %s", redirect_location)
+            request_to_sign = res.request.copy()
+            request_to_sign.url = redirect_location
+
+            res.request.headers['Authorization'] = self.ah.make_auth_header(
+                request_to_sign.url,
+                request_to_sign.headers,
+                request_to_sign.method,
+                request_to_sign.body,
+                eg_timestamp(),
+                new_nonce()
+            )
+
+    def __call__(self, r):
+        timestamp = eg_timestamp()
+        nonce = new_nonce()
+
+        r.headers['Authorization'] = self.ah.make_auth_header(
+            r.url,
+            r.headers,
+            r.method,
+            r.body,
+            timestamp,
+            nonce
+        )
+        r.register_hook('response', self.handle_redirect)
+        return r
+
+
 class EdgeGridAuthHeaders():
 
     def __init__(self, client_token, client_secret, access_token,
@@ -190,98 +285,3 @@ class EdgeGridAuthHeaders():
 
         logger.debug('signed authorization header: %s', signed_auth_header)
         return signed_auth_header
-
-
-
-class EdgeGridAuth(AuthBase):
-    """A Requests authentication handler that provides Akamai {OPEN} EdgeGrid support.
-
-    Basic Usage::
-        >>> import requests
-        >>> from akamai.edgegrid import EdgeGridAuth
-        >>> s = requests.Session()
-        >>> s.auth = EdgeGridAuth(
-            client_token='cccccccccccccccccc',
-            client_secret='sssssssssssssssss',
-            access_token='aaaaaaaaaaaaaaaaa'
-        )
-
-    """
-
-    def __init__(self, client_token, client_secret, access_token,
-                 headers_to_sign=None, max_body=131072):
-        """Initialize authentication using the given parameters from the Akamai OPEN APIs
-           Interface:
-
-        :param client_token: Client token provided by "Credentials" ui
-        :param client_secret: Client secret provided by "Credentials" ui
-        :param access_token: Access token provided by "Authorizations" ui
-        :param headers_to_sign: An ordered list header names that will be included in
-            the signature.  This will be provided by specific APIs. (default [])
-        :param max_body: Maximum content body size for POST requests. This will be provided by
-            specific APIs. (default 131072)
-
-        """
-        self.ah = EdgeGridAuthHeaders(
-            client_token,
-            client_secret,
-            access_token,
-            headers_to_sign,
-            max_body
-        )
-
-    @staticmethod
-    def from_edgerc(rcinput, section='default'):
-        """Returns an EdgeGridAuth object from the configuration from the given section of the
-           given edgerc file.
-
-        :param rcinput: EdgeRc instance or path to the edgerc file
-        :param section: the section to use (this is the [bracketed] part of the edgerc,
-            default is 'default')
-
-        """
-        from .edgerc import EdgeRc
-        if isinstance(rcinput, EdgeRc):
-            rc = rcinput
-        else:
-            rc = EdgeRc(rcinput)
-
-        return EdgeGridAuth(
-            client_token=rc.get(section, 'client_token'),
-            client_secret=rc.get(section, 'client_secret'),
-            access_token=rc.get(section, 'access_token'),
-            headers_to_sign=rc.getlist(section, 'headers_to_sign'),
-            max_body=rc.getint(section, 'max_body')
-        )
-
-    def handle_redirect(self, res, **kwargs):
-        if res.is_redirect:
-            redirect_location = res.headers['location']
-
-            logger.debug("signing the redirected url: %s", redirect_location)
-            request_to_sign = res.request.copy()
-            request_to_sign.url = redirect_location
-
-            res.request.headers['Authorization'] = self.ah.make_auth_header(
-                request_to_sign.url,
-                request_to_sign.headers,
-                request_to_sign.method,
-                request_to_sign.body,
-                eg_timestamp(),
-                new_nonce()
-            )
-
-    def __call__(self, r):
-        timestamp = eg_timestamp()
-        nonce = new_nonce()
-
-        r.headers['Authorization'] = self.ah.make_auth_header(
-            r.url,
-            r.headers,
-            r.method,
-            r.body,
-            timestamp,
-            nonce
-        )
-        r.register_hook('response', self.handle_redirect)
-        return r
