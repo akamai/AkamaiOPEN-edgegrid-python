@@ -83,7 +83,7 @@ class EdgeGridAuth(AuthBase):
     """
 
     def __init__(self, client_token, client_secret, access_token,
-                 headers_to_sign=None, max_body=131072):
+                 headers_to_sign=(), max_body=131072):
         """Initialize authentication using the given parameters from the Akamai OPEN APIs
            Interface:
 
@@ -96,21 +96,19 @@ class EdgeGridAuth(AuthBase):
             specific APIs. (default 131072)
 
         """
-        self.client_token = client_token
-        self.client_secret = client_secret
-        self.access_token = access_token
-        if headers_to_sign:
-            self.headers_to_sign = [h.lower() for h in headers_to_sign]
-        else:
-            self.headers_to_sign = []
-        self.max_body = max_body
-
-        self.redirect_location = None
+        self.ah = EdgeGridAuthHeaders(
+            client_token,
+            client_secret,
+            access_token,
+            headers_to_sign,
+            max_body
+        )
 
     @staticmethod
     def from_edgerc(rcinput, section='default'):
-        """Returns an EdgeGridAuth object from the configuration from the given section of the
-           given edgerc file.
+        """
+        Returns an EdgeGridAuth object from the configuration from the given section
+        of the given edgerc file.
 
         :param rcinput: EdgeRc instance or path to the edgerc file
         :param section: the section to use (this is the [bracketed] part of the edgerc,
@@ -131,27 +129,70 @@ class EdgeGridAuth(AuthBase):
             max_body=rc.getint(section, 'max_body')
         )
 
+    def handle_redirect(self, res, **kwargs):
+        if res.is_redirect:
+            redirect_location = res.headers['location']
+
+            logger.debug("signing the redirected url: %s", redirect_location)
+            request_to_sign = res.request.copy()
+            request_to_sign.url = redirect_location
+
+            res.request.headers['Authorization'] = self.ah.make_auth_header(
+                request_to_sign.url,
+                request_to_sign.headers,
+                request_to_sign.method,
+                request_to_sign.body,
+                eg_timestamp(),
+                new_nonce()
+            )
+
+    def __call__(self, r):
+        timestamp = eg_timestamp()
+        nonce = new_nonce()
+
+        r.headers['Authorization'] = self.ah.make_auth_header(
+            r.url,
+            r.headers,
+            r.method,
+            r.body,
+            timestamp,
+            nonce
+        )
+        r.register_hook('response', self.handle_redirect)
+        return r
+
+
+class EdgeGridAuthHeaders():
+
+    def __init__(self, client_token, client_secret, access_token,
+                 headers_to_sign=(), max_body=131072):
+        self.client_token = client_token
+        self.client_secret = client_secret
+        self.access_token = access_token
+        self.headers_to_sign = [h.lower() for h in headers_to_sign]
+        self.max_body = max_body
+
     def make_signing_key(self, timestamp):
         signing_key = base64_hmac_sha256(timestamp, self.client_secret)
         logger.debug('signing key: %s', signing_key)
         return signing_key
 
-    def canonicalize_headers(self, r):
+    def canonicalize_headers(self, headers):
         spaces_re = re.compile('\\s+')
 
         # note: r.headers is a case-insensitive dict and self.headers_to_sign
         # should already be lowercased at this point
         return '\t'.join([
-            "%s:%s" % (h, spaces_re.sub(' ', r.headers[h].strip()))
-            for h in self.headers_to_sign if h in r.headers
+            "%s:%s" % (h, spaces_re.sub(' ', headers[h].strip()))
+            for h in self.headers_to_sign if h in headers
         ])
 
-    def make_content_hash(self, r):
+    def make_content_hash(self, body, method):
         content_hash = ""
-        prepared_body = (r.body or '')
+        prepared_body = body
         logger.debug("body is '%s'", prepared_body)
 
-        if r.method == 'POST' and len(prepared_body) > 0:
+        if method == 'POST' and len(prepared_body) > 0:
             logger.debug("signing content: %s", prepared_body)
             if len(prepared_body) > self.max_body:
                 logger.debug(
@@ -192,38 +233,38 @@ class EdgeGridAuth(AuthBase):
 
         return header
 
-    def make_data_to_sign(self, r, auth_header):
-        parsed_url = urlparse(r.url)
+    def make_data_to_sign(self, url, headers, auth_header, method, body):
+        parsed_url = urlparse(url)
 
-        if r.headers.get('Host', False):
-            netloc = r.headers['Host']
+        if headers.get('Host', False):
+            netloc = headers['Host']
         else:
             netloc = parsed_url.netloc
 
-        self.get_header_versions(r.headers)
+        self.get_header_versions(headers)
 
         data_to_sign = '\t'.join([
-            r.method,
+            method,
             parsed_url.scheme,
             netloc,
             # Note: relative URL constraints are handled by requests when it
             # sets up 'r'
             parsed_url.path + \
             ('?' + parsed_url.query if parsed_url.query else ""),
-            self.canonicalize_headers(r),
-            self.make_content_hash(r),
+            self.canonicalize_headers(headers),
+            self.make_content_hash(body or '', method),
             auth_header
         ])
         logger.debug('data to sign: %s', '\\t'.join(data_to_sign.split('\t')))
         return data_to_sign
 
-    def sign_request(self, r, timestamp, auth_header):
+    def sign_request(self, url, headers, method, body, timestamp, auth_header):
         return base64_hmac_sha256(
-            self.make_data_to_sign(r, auth_header),
+            self.make_data_to_sign(url, headers, auth_header, method, body),
             self.make_signing_key(timestamp)
         )
 
-    def make_auth_header(self, r, timestamp, nonce):
+    def make_auth_header(self, url, headers, method, body, timestamp, nonce):
         kvps = [
             ('client_token', self.client_token),
             ('access_token', self.access_token),
@@ -235,27 +276,7 @@ class EdgeGridAuth(AuthBase):
         logger.debug('unsigned authorization header: %s', auth_header)
 
         signed_auth_header = auth_header + \
-            'signature=' + self.sign_request(r, timestamp, auth_header)
+            'signature=' + self.sign_request(url, headers, method, body, timestamp, auth_header)
 
         logger.debug('signed authorization header: %s', signed_auth_header)
         return signed_auth_header
-
-    def handle_redirect(self, res, **kwargs):
-        if res.is_redirect:
-            redirect_location = res.headers['location']
-
-            logger.debug("signing the redirected url: %s", redirect_location)
-            request_to_sign = res.request.copy()
-            request_to_sign.url = redirect_location
-
-            res.request.headers['Authorization'] = self.make_auth_header(
-                request_to_sign, eg_timestamp(), new_nonce()
-            )
-
-    def __call__(self, r):
-        timestamp = eg_timestamp()
-        nonce = new_nonce()
-
-        r.headers['Authorization'] = self.make_auth_header(r, timestamp, nonce)
-        r.register_hook('response', self.handle_redirect)
-        return r
