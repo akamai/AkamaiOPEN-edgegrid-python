@@ -83,7 +83,6 @@ def get_prepared_body_len(prepared_body):
         return prepared_body.len
 
 
-
 class EdgeGridAuth(AuthBase):
     """A Requests authentication handler that provides Akamai {OPEN} EdgeGrid support.
 
@@ -219,7 +218,7 @@ class EdgeGridAuthHeaders():
                 try:
                     prepared_body = prepared_body[0:self.max_body]
                 except TypeError:
-                    prepared_body = get_multipart_body(body, size=self.max_body)
+                    prepared_body = get_multipart_body(prepared_body, self.max_body)
                 logger.debug(
                     "data truncated to %d for computing the hash",
                     get_prepared_body_len(prepared_body))
