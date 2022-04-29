@@ -27,6 +27,7 @@ import logging
 import os
 import re
 import requests
+import requests_toolbelt
 import sys
 import unittest
 
@@ -262,6 +263,18 @@ class EGSimpleTest(unittest.TestCase):
             os.path.join(mydir, 'sample_edgerc'), 'dashes')
         self.assertEqual(auth.ah.max_body, 128 * 1024)
 
+    def test_get_multipart_body(self):
+        with open("%s/sample_file.txt" % mydir, "rb") as sample_file:
+            encoder = requests_toolbelt.MultipartEncoder(
+                fields={
+                    "foo": "bar",
+                    "baz": ("sample_file.txt", sample_file),
+                },
+                boundary="multipart_boundary",
+            )
+            self.assertEqual(eg.get_multipart_body(encoder, size=20), b"--multipart_boundary")
+            self.assertEqual(eg.get_multipart_body(encoder), encoder.to_string())
+
 
 class JsonTest(unittest.TestCase):
     def __init__(self, testdata=None, testcase=None):
@@ -301,6 +314,51 @@ class JsonTest(unittest.TestCase):
         self.assertEqual(auth_header, self.testdata['jsontest_hash'])
 
 
+class MultipartEncoderTest(unittest.TestCase):
+    def __init__(self, testdata=None, multipart_fields=None):
+        super(MultipartEncoderTest, self).__init__()
+        self.testdata = testdata
+        self.multipart_fields = multipart_fields
+        self.maxDiff = None
+
+    def runTest(self):
+        auth = EdgeGridAuth(
+            client_token=self.testdata["client_token"],
+            client_secret=self.testdata["client_secret"],
+            access_token=self.testdata["access_token"],
+        )
+
+        params = {
+            "extended": "true",
+        }
+
+        data = requests_toolbelt.MultipartEncoder(
+            fields=self.multipart_fields,
+            boundary="multipart_boundary",
+        )
+
+        request = requests.Request(
+            method="POST",
+            url=urljoin(self.testdata["base_url"], "/testapi/v1/t3"),
+            params=params,
+            data=data,
+        )
+
+        r = request.prepare()
+        auth_header = auth.ah.make_auth_header(
+            r.url, r.headers, r.method, r.body, self.testdata["timestamp"], self.testdata["nonce"]
+        )
+
+        # close any open files
+        for field in self.multipart_fields:
+            try:
+                field.close()
+            except AttributeError:
+                pass
+
+        self.assertEqual(auth_header, self.testdata["multipart_hash_test"])
+
+
 def suite():
     suite = unittest.TestSuite()
     with open("%s/testdata.json" % mydir) as testdata:
@@ -315,6 +373,17 @@ def suite():
 
     suite.addTest(JsonTest(testdata))
 
+    sample_file = open("%s/sample_file.txt" % mydir, "rb")
+    suite.addTest(
+        MultipartEncoderTest(
+            testdata,
+            multipart_fields={
+                "foo": "bar",
+                "baz": ("sample_file.txt", sample_file),
+            },
+        )
+    )
+
     suite.addTest(EGSimpleTest('test_nonce'))
     suite.addTest(EGSimpleTest('test_timestamp'))
     suite.addTest(EGSimpleTest('test_defaults'))
@@ -324,6 +393,7 @@ def suite():
     suite.addTest(EGSimpleTest('test_edgerc_headers'))
     suite.addTest(EGSimpleTest('test_get_header_versions'))
     suite.addTest(EGSimpleTest('test_edgerc_from_object'))
+    suite.addTest(EGSimpleTest('test_get_multipart_body'))
 
     return suite
 
