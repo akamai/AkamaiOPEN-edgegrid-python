@@ -350,9 +350,10 @@ class MultipartEncoderTest(unittest.TestCase):
         )
 
         # close any open files
-        for field in self.multipart_fields:
+        for part_value in self.multipart_fields.values():
+            f = part_value[1] if isinstance(part_value, (list, tuple)) else part_value
             try:
-                field.close()
+                f.close()
             except AttributeError:
                 pass
 
