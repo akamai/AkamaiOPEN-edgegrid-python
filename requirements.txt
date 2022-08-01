@@ -1,4 +1,5 @@
 requests>=2.3.0
+requests_toolbelt>=0.9.0
 pyopenssl>=19.0.0
 ndg-httpsclient
 pyasn1
