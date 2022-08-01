@@ -13,6 +13,7 @@ setup(
     python_requires=">=2.7.10",
     install_requires=[
         'requests>=2.3.0',
+        'requests_toolbelt>=0.9.0',
         'pyOpenSSL>=19.0.0',
         'ndg-httpsclient',
         'pyasn1',

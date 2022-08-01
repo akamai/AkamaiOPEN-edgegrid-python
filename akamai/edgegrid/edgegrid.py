@@ -61,10 +61,26 @@ def base64_hmac_sha256(data, key):
     ).decode('utf8')
 
 
+def get_multipart_body(encoder, size=-1):
+    multipart_body = encoder.read(size)
+    encoder._buffer.seek(0)
+    return multipart_body
+
+
 def base64_sha256(data):
     if isinstance(data, str):
         data = data.encode('utf8')
-    return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
+    try:
+        return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
+    except TypeError:
+        return base64.b64encode(hashlib.sha256(get_multipart_body(data)).digest()).decode('utf8')
+
+
+def get_prepared_body_len(prepared_body):
+    try:
+        return len(prepared_body)
+    except TypeError:
+        return prepared_body.len
 
 
 class EdgeGridAuth(AuthBase):
@@ -192,17 +208,20 @@ class EdgeGridAuthHeaders():
         prepared_body = body
         logger.debug("body is '%s'", prepared_body)
 
-        if method == 'POST' and len(prepared_body) > 0:
+        if method == 'POST' and get_prepared_body_len(prepared_body) > 0:
             logger.debug("signing content: %s", prepared_body)
-            if len(prepared_body) > self.max_body:
+            if get_prepared_body_len(prepared_body) > self.max_body:
                 logger.debug(
                     "data length %d is larger than maximum %d",
-                    len(prepared_body), self.max_body
+                    get_prepared_body_len(prepared_body), self.max_body
                 )
-                prepared_body = prepared_body[0:self.max_body]
+                try:
+                    prepared_body = prepared_body[0:self.max_body]
+                except TypeError:
+                    prepared_body = get_multipart_body(prepared_body, self.max_body)
                 logger.debug(
                     "data truncated to %d for computing the hash",
-                    len(prepared_body))
+                    get_prepared_body_len(prepared_body))
 
             content_hash = base64_sha256(prepared_body)
 
