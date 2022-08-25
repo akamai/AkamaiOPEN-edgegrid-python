@@ -1,6 +1,6 @@
 # EdgeGrid for Python
 
-This library implements an authentication handler for HTTP [requests](https://docs.python-requests.org/en/latest/) using the [EdgeGrid authentication](https://techdocs.akamai.com/developer/docs/authenticate-with-edgegrid) scheme.
+This library implements an authentication handler for HTTP [requests](https://requests.readthedocs.io/en/latest/) using the [EdgeGrid authentication](https://techdocs.akamai.com/developer/docs/authenticate-with-edgegrid) scheme.
 
 ## Prerequisites
 Before you begin, you need to [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials) in [Control Center](https://control.akamai.com/).
@@ -51,7 +51,7 @@ Oakbrook, IL, United States
 ...
 ```
 
-This is an example of an API call to [List available edge server locations](https://techdocs.akamai.com/diagnostic-tools/reference/ghost-locationsavailable). Change the `baseurl` element to reference an endpoint in any of the [Akamai APIs](https://developer.akamai.com/api).
+This is an example of an API call to [List available edge server locations](https://techdocs.akamai.com/diagnostic-tools/reference/ghost-locationsavailable). Change the `baseurl` element to reference an endpoint in any of the [Akamai APIs](https://techdocs.akamai.com/home/page/products-tools-a-z?sort=api).
 
 Alternatively, your program can read the credential values directly from the `.edgerc`.
 
@@ -133,7 +133,7 @@ Jonathan Landis
 
 ## License
 
-> Copyright 2021 Akamai Technologies, Inc. All rights reserved.
+> Copyright 2022 Akamai Technologies, Inc. All rights reserved.
 >
 > Licensed under the Apache License, Version 2.0 (the \"License\"); you
 > may not use this file except in compliance with the License. You may
