@@ -3,6 +3,16 @@
 History
 -------
 
+1.3.0 (2022-08-29)
+++++++++++++++++++
+
+* Improvements
+    - decouple from `requests` library
+    - add support for MultipartEncoder
+
+* Bug fixes
+    - remove unnecessary shebangs and permissions
+
 1.2.1 (2021-10-11)
 ++++++++++++++++++
 

@@ -116,7 +116,7 @@
                     {"X-Test1": "     first-thing      second-thing"}
                 ]
             },
-	    "failsWithMessage": "Invalid return character or leading space in header: X-Test1",
+	    "failsWithMessage": "Invalid leading whitespace, reserved character(s), or returncharacter(s) in header value: '     first-thing      second-thing'",
             "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=WtnneL539UadAAOJwnsXvPqT4Kt6z7HMgBEwAFpt3+c="
         },
         {
