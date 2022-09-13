@@ -3,6 +3,12 @@
 History
 -------
 
+X.X.X (2022-XX-XX)
+++++++++++++++++++
+
+* Bug fixes
+    - `GH#51 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/51>`_: include path params in signed path
+
 1.3.0 (2022-08-29)
 ++++++++++++++++++
 
