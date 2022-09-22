@@ -109,6 +109,7 @@ class EdgeGridTest(unittest.TestCase):
 
         try:
             r = request.prepare()
+            data_to_sign = auth.ah.make_data_to_sign(r.url, r.headers, "", r.method, r.body)
             auth_header = auth.ah.make_auth_header(
                 r.url, r.headers, r.method, r.body, self.testdata['timestamp'],
                 self.testdata['nonce']
@@ -119,6 +120,7 @@ class EdgeGridTest(unittest.TestCase):
             return
 
         self.assertEqual(auth_header, self.testcase['expectedAuthorization'])
+        self.assertEqual(data_to_sign, self.testcase['expectedDataToSign'])
 
 
 class EGSimpleTest(unittest.TestCase):

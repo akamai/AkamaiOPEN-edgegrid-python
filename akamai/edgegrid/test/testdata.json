@@ -21,7 +21,8 @@
                     {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=tL+y4hxyHxgWVD30X3pWnGKHcPzmrIF+LThiAOhMxYU="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=tL+y4hxyHxgWVD30X3pWnGKHcPzmrIF+LThiAOhMxYU=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/\t\t\t"
         },
         {
             "testName": "GET with querystring",
@@ -32,7 +33,8 @@
                     {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=hKDH1UlnQySSHjvIcZpDMbQHihTQ0XyVAKZaApabdeA="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=hKDH1UlnQySSHjvIcZpDMbQHihTQ0XyVAKZaApabdeA=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t1?p1=1&p2=2\t\t\t"
         },
         {
             "testName": "POST inside limit",
@@ -44,7 +46,8 @@
                     {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=hXm4iCxtpN22m4cbZb4lVLW5rhX8Ca82vCFqXzSTPe4="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=hXm4iCxtpN22m4cbZb4lVLW5rhX8Ca82vCFqXzSTPe4=",
+            "expectedDataToSign": "POST\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t3\t\tfDimoYqXOLntG3If/Z0K2aS9I19Pkv9P5OMCoL8lY0w=\t"
         },
         {
             "testName": "POST too large",
@@ -56,7 +59,8 @@
                     {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=6Q6PiTipLae6n4GsSIDTCJ54bEbHUBp+4MUXrbQCBoY="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=6Q6PiTipLae6n4GsSIDTCJ54bEbHUBp+4MUXrbQCBoY=",
+            "expectedDataToSign": "POST\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t3\t\tiysZKJ78BqF0NvDrpv9Hc3pJBWC5f5apR4qUK/Qfo5k=\t"
         },
         {
             "testName": "POST length equals max_body",
@@ -68,7 +72,8 @@
                     {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=6Q6PiTipLae6n4GsSIDTCJ54bEbHUBp+4MUXrbQCBoY="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=6Q6PiTipLae6n4GsSIDTCJ54bEbHUBp+4MUXrbQCBoY=",
+            "expectedDataToSign": "POST\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t3\t\tiysZKJ78BqF0NvDrpv9Hc3pJBWC5f5apR4qUK/Qfo5k=\t"
         },
         {
             "testName": "POST empty body",
@@ -80,7 +85,8 @@
                     {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=1gEDxeQGD5GovIkJJGcBaKnZ+VaPtrc4qBUHixjsPCQ="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=1gEDxeQGD5GovIkJJGcBaKnZ+VaPtrc4qBUHixjsPCQ=",
+            "expectedDataToSign": "POST\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t6\t\t\t"
         },
         {
             "testName": "Simple header signing with GET",
@@ -92,7 +98,8 @@
                     {"X-Test1": "test-simple-header"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=8F9AybcRw+PLxnvT+H0JRkjROrrUgsxJTnRXMzqvcwY="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=8F9AybcRw+PLxnvT+H0JRkjROrrUgsxJTnRXMzqvcwY=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t4\tx-test1:test-simple-header\t\t"
         },
         {
             "testName": "Header containing spaces",
@@ -104,7 +111,8 @@
                     {"X-Test1": "\"     test-header-with-spaces     \""}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=ucq2AbjCNtobHfCTuS38fdkl5UDdWHZhQX46fYR8CqI="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=ucq2AbjCNtobHfCTuS38fdkl5UDdWHZhQX46fYR8CqI=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t4\tx-test1:\" test-header-with-spaces \"\t\t"
         },
         {
             "testName": "Header with leading and interior spaces",
@@ -131,7 +139,8 @@
                     {"X-Test3": "t3"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=Wus73Nx8jOYM+kkBFF2q8D1EATRIMr0WLWwpLBgkBqY="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=Wus73Nx8jOYM+kkBFF2q8D1EATRIMr0WLWwpLBgkBqY=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t4\tx-test1:t1\tx-test2:t2\tx-test3:t3\t\t"
         },
         {
             "testName": "Extra header",
@@ -146,7 +155,8 @@
                     {"X-Extra": "this won't be included"}
                 ]
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=Knd/jc0A5Ghhizjayr0AUUvl2MZjBpS3FDSzvtq4Ixc="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=Knd/jc0A5Ghhizjayr0AUUvl2MZjBpS3FDSzvtq4Ixc=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t5\tx-test1:t1\tx-test2:t2\tx-test3:t3\t\t"
         },
         {
             "testName": "PUT test",
@@ -155,7 +165,33 @@
                 "path": "/testapi/v1/t6",
                 "data": "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"
             },
-            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=GNBWEYSEWOLtu+7dD52da2C39aX/Jchpon3K/AmBqBU="
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=GNBWEYSEWOLtu+7dD52da2C39aX/Jchpon3K/AmBqBU=",
+            "expectedDataToSign": "PUT\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t6\t\t\t"
+        },
+        {
+            "testName": "GET with query params",
+            "request": {
+                "method": "GET",
+                "path": "/testapi/v1/configs/111?from=12345&limit=200000",
+                "headers": [
+                    {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
+                ]
+            },
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=XM+hsuSs6nuy/5eDRty1IjtVCAdr8xPFRAZ/b8RXDm8=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/configs/111?from=12345&limit=200000\t\t\t"
+        },
+        {
+            "_comment": "signature must be different here than in 'GET with query params' test",
+            "testName": "GET with query params and separator in path",
+            "request": {
+                "method": "GET",
+                "path": "/testapi/v1/configs/111;222;333?from=12345&limit=200000",
+                "headers": [
+                    {"Host": "akaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net"}
+                ]
+            },
+            "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=pmQF7Is2+O4r/mMojPR4yeF58BrempNNoBX5/DT0Fxs=",
+            "expectedDataToSign": "GET\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/configs/111;222;333?from=12345&limit=200000\t\t\t"
         }
     ]
 }
