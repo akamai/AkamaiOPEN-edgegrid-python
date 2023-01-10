@@ -1,4 +1,4 @@
-# support for .edgerc file format
+"""Support for .edgerc file format"""
 #
 # Copyright 2021 Akamai Technologies, Inc. All Rights Reserved
 #
@@ -25,11 +25,11 @@ else:
     # python2.7
     from ConfigParser import ConfigParser
 
-
 logger = logging.getLogger(__name__)
 
 
 class EdgeRc(ConfigParser):
+    """Class for managing .edgerc files"""
     def __init__(self, filename):
         ConfigParser.__init__(self,
                               {'client_token': '',
@@ -50,11 +50,9 @@ class EdgeRc(ConfigParser):
 
     def getlist(self, section, option):
         """
-            returns the named option as a list, splitting the original value
-            by ','
+            returns the named option as a list, splitting the original value by ','
         """
         value = self.get(section, option)
         if value:
             return value.split(',')
-        else:
-            return None
+        return None

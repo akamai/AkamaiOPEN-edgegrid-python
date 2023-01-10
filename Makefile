@@ -8,7 +8,7 @@ help:
 
 .PHONY: install
 install:
-	$(PYTHON) -m venv venv; . venv/bin/activate; python -m pip install -r requirements.txt
+	$(PYTHON) -m venv venv; . venv/bin/activate; python -m pip install -r dev-requirements.txt
 
 .PHONY: clean
 clean:
@@ -17,7 +17,11 @@ clean:
 
 .PHONY: test
 test:
-	. venv/bin/activate; python -m unittest discover
+	@. venv/bin/activate; pytest --junitxml $(CURDIR)/test/tests.xml --cov-report xml:$(CURDIR)/test/coverage/cobertura-coverage.xml --cov=akamai
+
+.PHONY: lint
+lint:
+	@. venv/bin/activate; pylint ./akamai
 
 .PHONY: all
-all: clean install test
+all: clean install test lint

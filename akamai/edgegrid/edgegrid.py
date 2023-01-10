@@ -1,4 +1,5 @@
-# EdgeGrid requests Auth handler
+# pylint: disable=too-many-arguments,missing-function-docstring
+"""EdgeGrid requests Auth handler"""
 #
 # Original author: Jonathan Landis <jlandis@akamai.com>
 # Package maintainer: Akamai Developer Experience team <dl-devexp-eng@akamai.com>
@@ -27,8 +28,9 @@ import base64
 import re
 import sys
 import os
-from requests.auth import AuthBase
 from time import gmtime, strftime
+from requests.auth import AuthBase
+from .edgerc import EdgeRc
 
 if sys.version_info[0] >= 3:
     # python3
@@ -37,6 +39,7 @@ else:
     # python2.7
     from urlparse import urlparse
     import urllib3.contrib.pyopenssl
+
     urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 logger = logging.getLogger(__name__)
@@ -45,6 +48,7 @@ __all__ = ['EdgeGridAuth']
 
 
 def eg_timestamp():
+    """Generates EdgeGrid compatible timestamp"""
     return strftime('%Y%m%dT%H:%M:%S+0000', gmtime())
 
 
@@ -63,6 +67,7 @@ def base64_hmac_sha256(data, key):
 
 def get_multipart_body(encoder, size=-1):
     multipart_body = encoder.read(size)
+    # pylint: disable=protected-access
     encoder._buffer.seek(0)
     return multipart_body
 
@@ -112,6 +117,7 @@ class EdgeGridAuth(AuthBase):
             specific APIs. (default 131072)
 
         """
+        # pylint: disable=invalid-name
         self.ah = EdgeGridAuthHeaders(
             client_token,
             client_secret,
@@ -131,21 +137,20 @@ class EdgeGridAuth(AuthBase):
             default is 'default')
 
         """
-        from .edgerc import EdgeRc
         if isinstance(rcinput, EdgeRc):
-            rc = rcinput
+            edgerc = rcinput
         else:
-            rc = EdgeRc(rcinput)
+            edgerc = EdgeRc(rcinput)
 
         return EdgeGridAuth(
-            client_token=rc.get(section, 'client_token'),
-            client_secret=rc.get(section, 'client_secret'),
-            access_token=rc.get(section, 'access_token'),
-            headers_to_sign=rc.getlist(section, 'headers_to_sign'),
-            max_body=rc.getint(section, 'max_body')
+            client_token=edgerc.get(section, 'client_token'),
+            client_secret=edgerc.get(section, 'client_secret'),
+            access_token=edgerc.get(section, 'access_token'),
+            headers_to_sign=edgerc.getlist(section, 'headers_to_sign'),
+            max_body=edgerc.getint(section, 'max_body')
         )
 
-    def handle_redirect(self, res, **kwargs):
+    def handle_redirect(self, res, **_):
         if res.is_redirect:
             redirect_location = res.headers['location']
 
@@ -178,8 +183,11 @@ class EdgeGridAuth(AuthBase):
         return r
 
 
-class EdgeGridAuthHeaders():
-
+class EdgeGridAuthHeaders:
+    """
+        A class for preparing requests authentication headers needed for
+        Akamai {OPEN} EdgeGrid support.
+    """
     def __init__(self, client_token, client_secret, access_token,
                  headers_to_sign=(), max_body=131072):
         self.client_token = client_token
@@ -197,7 +205,8 @@ class EdgeGridAuthHeaders():
         spaces_re = re.compile('\\s+')
 
         # note: r.headers is a case-insensitive dict and self.headers_to_sign
-        # should already be lowercased at this point
+        # should already be in lowercase at this point
+        # pylint: disable=consider-using-f-string
         return '\t'.join([
             "%s:%s" % (h, spaces_re.sub(' ', headers[h].strip()))
             for h in self.headers_to_sign if h in headers
@@ -228,7 +237,8 @@ class EdgeGridAuthHeaders():
         logger.debug("content hash is '%s'", content_hash)
         return content_hash
 
-    def get_header_versions(self, header=None):
+    @staticmethod
+    def get_header_versions(header=None):
         if header is None:
             header = {}
 
@@ -242,7 +252,7 @@ class EdgeGridAuthHeaders():
         akamai_cli_command_version = os.getenv('AKAMAI_CLI_COMMAND_VERSION')
         if akamai_cli_command and akamai_cli_command_version:
             version_header += " AkamaiCLI-" + akamai_cli_command + \
-                "/" + akamai_cli_command_version
+                              "/" + akamai_cli_command_version
 
         if version_header != '':
             if 'User-Agent' not in header:
@@ -290,7 +300,7 @@ class EdgeGridAuthHeaders():
             ('nonce', nonce),
         ]
         auth_header = "EG1-HMAC-SHA256 " + \
-            ';'.join(["%s=%s" % kvp for kvp in kvps]) + ';'
+            ';'.join([f"{k}={v}" for k, v in kvps]) + ';'
         logger.debug('unsigned authorization header: %s', auth_header)
 
         signed_auth_header = auth_header + \
