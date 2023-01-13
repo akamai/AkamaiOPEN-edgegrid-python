@@ -30,7 +30,7 @@ import pytest
 
 import akamai.edgegrid.edgegrid as eg
 from akamai.edgegrid import EdgeGridAuth, EdgeRc
-from .conftest import cases, names, test_dir
+from akamai.edgegrid.test.conftest import cases, names, test_dir
 
 PY_VER = sys.version_info[0]
 if sys.version_info[0] == 3:
