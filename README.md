@@ -5,6 +5,7 @@ This library implements an authentication handler for HTTP [requests](https://re
 ## Prerequisites
 Before you begin, you need to [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials) in [Control Center](https://control.akamai.com/).
 
+Edgegrid should be used with one of [officially supported Python versions](https://devguide.python.org/versions/#supported-versions).
 Download the Python release compatible with your operating system at [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
 > Python 2 is no longer supported by the [Python Software Foundation](https://www.python.org/doc/sunset-python-2/).
