@@ -78,6 +78,9 @@ Oakbrook, IL, United States
 
 > NOTE: If your `.edgerc` file contains more than one credential set, use the `section` argument to specify which section contains the credentials for your API request.
 
+As a request body, the library currently supports the following types: `bytes`, file-like object,
+`requests_toolbelt.MultipartEncoder` object.
+
 ## Virtual environment
 
 To test in a [virtual environment](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments), run:

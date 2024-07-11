@@ -30,9 +30,15 @@ def names(tests):
 
 @pytest.fixture
 def multipart_fields():
-    with open(f'{test_dir}/sample_file.txt', "rb") as sample_file:
+    with open(f'{test_dir}/sample_file.txt', "rb") as f:
         result = {
             "foo": "bar",
-            "baz": ("sample_file.txt", sample_file),
+            "baz": ("sample_file.txt", f),
         }
         yield result
+
+
+@pytest.fixture
+def sample_file():
+    with open(f'{test_dir}/sample_file.txt', "rb") as f:
+        yield f

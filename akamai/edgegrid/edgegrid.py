@@ -65,27 +65,84 @@ def base64_hmac_sha256(data, key):
     ).decode('utf8')
 
 
-def get_multipart_body(encoder, size=-1):
-    multipart_body = encoder.read(size)
-    # pylint: disable=protected-access
-    encoder._buffer.seek(0)
-    return multipart_body
-
-
 def base64_sha256(data):
-    if isinstance(data, str):
-        data = data.encode('utf8')
-    try:
-        return base64.b64encode(hashlib.sha256(data).digest()).decode('utf8')
-    except TypeError:
-        return base64.b64encode(hashlib.sha256(get_multipart_body(data)).digest()).decode('utf8')
+    digest = hashlib.sha256(data).digest()
+    return base64.b64encode(digest).decode('utf8')
 
 
-def get_prepared_body_len(prepared_body):
+def read_stream_and_rewind(f, max_read):
+    """Reads up to read_max bytes from a python file object (like _io.BufferedReader)
+    or a MultipartEncoder object, then rewinds the stream.
+
+    The read() method of these objects is decorated by httpie with a side-effect code which
+    prints the body content to stdout when the 'B' option is specified for --print. However,
+    it does not trigger in the pre-request phase when this plugin is executed. Still, after reading
+    we must set the stream position to the beginning to not impact subsequent reads outside
+    the plugin. (We don't assume we can be passed a partially read stream to the plugin.)
+
+    Raises TypeError if read() or seek() is not supported by f or f._buffer. May potentially raise
+    OSError for any failed I/O operation, in particular io.UnsupportedOperation if the stream is
+    not seekable (e.g. is a pipe which we don't expect here as httpie reads pipe contents and
+    sets body as bytes).
+    """
     try:
-        return len(prepared_body)
-    except TypeError:
-        return prepared_body.len
+        res = f.read(max_read)
+    except AttributeError as exc:
+        raise TypeError(f'akamai.edgegrid: unexpected body type: {type(f).__name__}') from exc
+
+    try:
+        f.seek(0)
+    except AttributeError:
+        # a MultipartEncoder
+        try:
+            # During read(), MultipartEncoder lazily loads its upload parts into self._buffer
+            # depending on the requested number of bytes. Then a regular read() on self._buffer
+            # is performed. Therefore, rewinding self._buffer effectively rewinds the whole
+            # MultipartEncoder content.
+            # pylint: disable=protected-access
+            f._buffer.seek(0)
+        except AttributeError as exc:
+            raise TypeError(f'akamai.edgegrid: unexpected body type: {type(f).__name__}') from exc
+    return res
+
+
+def read_body_content(body, max_body):
+    """The body argument may be one of the following:
+    1. bytes object
+    2. str object
+    3. _io.BufferedReader object for body input from file
+    4. requests_toolbelt.MultipartEncoder object for multipart form requests
+    5. httpie.uploads.ChunkedUploadStream object for chunked transfer encoding
+    (when --chunked, currently not supported)
+    May raise TypeError for unexpected input type or OSError for I/O operations.
+    """
+    if isinstance(body, bytes):
+        return body[:max_body]
+    if isinstance(body, str):
+        return body.encode('utf8')[:max_body]
+    return read_stream_and_rewind(body, max_body)
+
+
+def determine_body_len(body):
+    """May raise exception if body appears to be a file (is not a str, bytes or MultipartEncoder)
+    but either:
+    - has no fileno method (TypeError)
+    - raises OSError while trying to calculate the length using the file descriptor"""
+    if isinstance(body, bytes):
+        return len(body)
+    if isinstance(body, str):
+        return len(body.encode('utf8'))
+
+    try:
+        # a MultipartEncoder?
+        return body.len
+    except AttributeError:
+        # a file object?
+        try:
+            return os.stat(body.fileno()).st_size
+        except AttributeError as exc:
+            raise TypeError(
+                f'akamai.edgegrid: unexpected body type: {type(body).__name__}') from exc
 
 
 class EdgeGridAuth(AuthBase):
@@ -213,27 +270,23 @@ class EdgeGridAuthHeaders:
         ])
 
     def make_content_hash(self, body, method):
+        logger.debug("body is '%s'", body)
         content_hash = ""
-        prepared_body = body
-        logger.debug("body is '%s'", prepared_body)
-
-        if method == 'POST' and get_prepared_body_len(prepared_body) > 0:
-            logger.debug("signing content: %s", prepared_body)
-            if get_prepared_body_len(prepared_body) > self.max_body:
-                logger.debug(
-                    "data length %d is larger than maximum %d",
-                    get_prepared_body_len(prepared_body), self.max_body
-                )
+        if method == 'POST':
+            buf = read_body_content(body, self.max_body)
+            if buf:
+                logger.debug("signing content: %s", buf)
+                content_hash = base64_sha256(buf)
                 try:
-                    prepared_body = prepared_body[0:self.max_body]
-                except TypeError:
-                    prepared_body = get_multipart_body(prepared_body, self.max_body)
-                logger.debug(
-                    "data truncated to %d for computing the hash",
-                    get_prepared_body_len(prepared_body))
-
-            content_hash = base64_sha256(prepared_body)
-
+                    body_len = determine_body_len(body)
+                    if body_len > self.max_body:
+                        logger.debug(
+                            "data length %d is larger than maximum %d "
+                            "and will be truncated for computing the hash",
+                            body_len, self.max_body)
+                except (TypeError, OSError) as e:
+                    # body length is needed only for debugging: just log a possible exception
+                    logger.warning("cannot determine length of request body=%s: %s", body, e)
         logger.debug("content hash is '%s'", content_hash)
         return content_hash
 

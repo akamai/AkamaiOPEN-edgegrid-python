@@ -3,6 +3,12 @@
 History
 -------
 
+X.X.X (X-X-X)
+++++++++++++++++++
+
+* Bug fixes
+    - properly handle file objects in the request body in EdgeGridAuth
+
 1.3.1 (2022-09-22)
 ++++++++++++++++++
 

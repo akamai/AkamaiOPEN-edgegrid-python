@@ -1,6 +1,5 @@
 # pylint: disable=missing-function-docstring
 """unit tests for edgegrid. It runs tests from testcases.json"""
-
 # Original author: Jonathan Landis <jlandis@akamai.com>
 # Package maintainer: Akamai Developer Experience team <dl-devexp-eng@akamai.com>
 #
@@ -20,10 +19,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import io
 import logging
 import os
 import re
 import sys
+import unittest.mock
+
 import requests
 import requests_toolbelt
 import pytest
@@ -65,6 +67,26 @@ def test_edge_grid_auth_headers(testdata):
 
     header = auth_headers.get_header_versions()
     assert header == {}
+
+
+def test_make_content_hash_logs_warning_for_unknown_body_len(testdata, caplog):
+    auth_headers = eg.EdgeGridAuthHeaders(
+        client_token=testdata['client_token'],
+        client_secret=testdata['client_secret'],
+        access_token=testdata['access_token'],
+        headers_to_sign=testdata['headers_to_sign'],
+        max_body=testdata['max_body']
+    )
+
+    def throwing_determine_body_len(_):
+        raise OSError('boom')
+
+    with unittest.mock.patch('akamai.edgegrid.edgegrid.determine_body_len',
+                             throwing_determine_body_len):
+        content_hash = auth_headers.make_content_hash(body="test_body", method="POST")
+        assert content_hash == testdata["content_hash_test"]
+        assert re.match(r'WARNING.+cannot determine length of request body=.+:\s+boom',
+                        caplog.text)
 
 
 @pytest.mark.parametrize("testcase", cases(), ids=names(cases()))
@@ -238,17 +260,109 @@ def test_edgerc_dashes():
     assert auth.ah.max_body == 128 * 1024
 
 
-def test_get_multipart_body():
-    with open(f'{test_dir}/sample_file.txt', "rb") as sample_file:
-        encoder = requests_toolbelt.MultipartEncoder(
-            fields={
-                "foo": "bar",
-                "baz": ("sample_file.txt", sample_file),
-            },
-            boundary="multipart_boundary",
-        )
-        assert eg.get_multipart_body(encoder, size=20) == b"--multipart_boundary"
-        assert eg.get_multipart_body(encoder) == encoder.to_string()
+class TestReadBodyContent:
+    """Test read_body_content"""
+    def test_reading_from_str(self):
+        assert eg.read_body_content('foobar', 10) == b'foobar'
+
+    def test_reading_from_str_truncated(self):
+        assert eg.read_body_content('foobar', 3) == b'foo'
+
+    def test_reading_from_bytes(self):
+        assert eg.read_body_content(b'foobar', 10) == b'foobar'
+
+    def test_reading_from_bytes_truncated(self):
+        assert eg.read_body_content(b'foobar', 3) == b'foo'
+
+    def test_basic_reading_from_file_object(self, sample_file):
+        assert eg.read_body_content(sample_file, 32) == b'this is a sample file.'
+
+    def test_basic_reading_from_multipart_encoder(self):
+        def encoder():
+            return requests_toolbelt.MultipartEncoder({'foo': 'bar'}, boundary='baz')
+
+        assert eg.read_body_content(encoder(), 1024) == encoder().to_string()
+
+
+class TestReadStreamAndRewind:
+    """Test read_stream_and_rewind"""
+    def test_with_file_object(self, sample_file):
+        assert eg.read_stream_and_rewind(sample_file, 32) == b'this is a sample file.'
+        assert sample_file.read() == b'this is a sample file.'
+
+    def test_with_file_object_truncated(self, sample_file):
+        assert eg.read_stream_and_rewind(sample_file, 4) == b'this'
+        assert sample_file.read() == b'this is a sample file.'
+
+    def test_with_multipart_encoder(self, multipart_fields):
+        encoder = requests_toolbelt.MultipartEncoder(multipart_fields, "multipart_boundary")
+
+        buf = eg.read_stream_and_rewind(encoder, 1024)
+        assert buf == encoder.to_string()
+        assert buf.startswith(b'--multipart_boundary')
+        assert len(buf) == encoder.len
+
+    def test_with_multipart_encoder_truncated(self, multipart_fields):
+        encoder = requests_toolbelt.MultipartEncoder(multipart_fields, "multipart_boundary")
+
+        assert eg.read_stream_and_rewind(encoder, 20) == b'--multipart_boundary'
+        buf = eg.read_stream_and_rewind(encoder, 1024)
+        assert buf == encoder.to_string()
+        assert buf.startswith(b'--multipart_boundary')
+        assert len(buf) == encoder.len
+
+    def test_raises_when_input_has_no_read_method(self):
+        with pytest.raises(TypeError) as excinfo:
+            eg.read_stream_and_rewind('foo', 10)
+        assert excinfo.match('akamai.edgegrid: unexpected body type: str')
+        assert str(excinfo.value.__cause__) == "'str' object has no attribute 'read'"
+
+    def test_raises_when_input_has_no_seek_method(self):
+        # pylint: disable=missing-class-docstring,too-few-public-methods
+        class DummyReader:
+            def read(self, _):
+                return b'Hello'
+
+        with pytest.raises(TypeError) as excinfo:
+            eg.read_stream_and_rewind(DummyReader(), 10)
+        assert excinfo.match('akamai.edgegrid: unexpected body type: DummyReader')
+        assert str(excinfo.value.__cause__) == "'DummyReader' object has no attribute '_buffer'"
+
+    def test_raises_when_stream_not_seekable(self):
+        r, w = os.pipe()
+        os.write(w, b'Hello, pipe!')
+        os.close(w)
+        with pytest.raises(io.UnsupportedOperation) as excinfo:
+            with open(r, 'rb') as pipe:
+                eg.read_stream_and_rewind(pipe, 10)
+        assert excinfo.match('not seekable')
+
+
+class TestDetermineBodyLen:
+    """Test determine_body_len"""
+    def test_with_str(self):
+        assert eg.determine_body_len('foobarbaz') == 9
+
+    def test_with_bytes(self):
+        assert eg.determine_body_len(b'foobarbaz') == 9
+
+    def test_with_file(self, sample_file):
+        assert eg.determine_body_len(sample_file) == len('this is a sample file.')
+
+    def test_with_multipart_encoder(self, multipart_fields):
+        encoder = requests_toolbelt.MultipartEncoder(multipart_fields, "boundary")
+        assert eg.determine_body_len(encoder) == encoder.len
+
+    def test_raises_on_unknown_body_type(self):
+        with pytest.raises(TypeError) as excinfo:
+            eg.determine_body_len({'foo': 'bar'})
+        assert excinfo.match('akamai.edgegrid: unexpected body type: dict')
+        assert str(excinfo.value.__cause__) == "'dict' object has no attribute 'fileno'"
+
+    def test_raises_when_filelike_body_does_not_support_file_descriptors(self):
+        with pytest.raises(io.UnsupportedOperation) as excinfo:
+            eg.determine_body_len(io.StringIO("Hello, string"))
+        assert excinfo.match('fileno')
 
 
 def test_json(testdata):
@@ -309,13 +423,5 @@ def test_multipart_encoder(testdata, multipart_fields):
     auth_header = auth.ah.make_auth_header(
         req.url, req.headers, req.method, req.body, testdata["timestamp"], testdata["nonce"]
     )
-
-    # close any open files
-    for part_value in multipart_fields.values():
-        file = part_value[1] if isinstance(part_value, (list, tuple)) else part_value
-        try:
-            file.close()
-        except AttributeError:
-            pass
 
     assert auth_header == testdata["multipart_hash_test"]
