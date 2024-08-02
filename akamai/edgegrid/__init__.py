@@ -37,10 +37,8 @@ __all__ = ['EdgeGridAuth', 'EdgeRc']
 
 __title__ = 'edgegrid-python'
 __version__ = '1.3.1'
-__author__ = 'Jonathan Landis <jlandis@akamai.com>'
-__maintainer__ = 'Akamai Developer Experience team <dl-devexp-eng@akamai.com>'
 __license__ = 'Apache 2.0'
-__copyright__ = 'Copyright 2021 Akamai Technologies'
+__copyright__ = 'Copyright 2024 Akamai Technologies'
 
 # Copyright 2021 Akamai Technologies, Inc. All Rights Reserved
 #

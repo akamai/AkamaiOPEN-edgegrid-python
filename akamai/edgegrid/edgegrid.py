@@ -1,12 +1,9 @@
 # pylint: disable=too-many-arguments,missing-function-docstring
 """EdgeGrid requests Auth handler"""
 #
-# Original author: Jonathan Landis <jlandis@akamai.com>
-# Package maintainer: Akamai Developer Experience team <dl-devexp-eng@akamai.com>
-#
 # For more information visit https://developer.akamai.com
 
-# Copyright 2021 Akamai Technologies, Inc. All Rights Reserved
+# Copyright 2024 Akamai Technologies, Inc. All Rights Reserved
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
