@@ -4,7 +4,7 @@ This library implements an Authentication handler for [HTTP requests](https://re
 
 ## Install
 
-To use the library, you need to have Python 3 installed on your system. You can download it from [https://www.python.org/downloads/](https://www.python.org/downloads/).
+To use the library, you need to have Python 3.6 or later installed on your system. You can download it from [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
 > __NOTE:__ Python 2 is no longer supported by the [Python Software Foundation](https://www.python.org/doc/sunset-python-2/). You won't be able to use the library with Python 2.
 

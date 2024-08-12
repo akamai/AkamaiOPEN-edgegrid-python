@@ -7,7 +7,7 @@ setup(
     url='https://github.com/akamai/AkamaiOPEN-edgegrid-python',
     namespace_packages=['akamai'],
     packages=find_packages(),
-    python_requires=">=2.7.10",
+    python_requires=">=3.6",
     install_requires=[
         'requests>=2.3.0',
         'requests_toolbelt>=0.9.0',

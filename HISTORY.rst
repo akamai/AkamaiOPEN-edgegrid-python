@@ -6,6 +6,9 @@ History
 X.X.X (X-X-X)
 ++++++++++++++++++
 
+* Breaking changes
+    - discontinue support for Python 2.7, the minimum supported version is now Python 3.6
+
 * Bug fixes
     - properly handle file objects in the request body in EdgeGridAuth
 

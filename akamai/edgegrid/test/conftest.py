@@ -1,8 +1,8 @@
 # pylint: disable=missing-function-docstring
 """Unit tests helpers"""
+
 import json
 import os
-
 import pytest
 
 test_dir = os.path.abspath(os.path.dirname(__file__))

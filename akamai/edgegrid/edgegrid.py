@@ -23,21 +23,13 @@ import hashlib
 import hmac
 import base64
 import re
-import sys
 import os
 from time import gmtime, strftime
+from urllib.parse import urlparse
+
 from requests.auth import AuthBase
+
 from .edgerc import EdgeRc
-
-if sys.version_info[0] >= 3:
-    # python3
-    from urllib.parse import urlparse
-else:
-    # python2.7
-    from urlparse import urlparse
-    import urllib3.contrib.pyopenssl
-
-    urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 logger = logging.getLogger(__name__)
 

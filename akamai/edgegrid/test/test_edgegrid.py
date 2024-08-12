@@ -21,8 +21,8 @@ import io
 import logging
 import os
 import re
-import sys
 import unittest.mock
+from urllib.parse import urljoin
 
 import requests
 import requests_toolbelt
@@ -31,14 +31,6 @@ import pytest
 import akamai.edgegrid.edgegrid as eg
 from akamai.edgegrid import EdgeGridAuth, EdgeRc
 from akamai.edgegrid.test.conftest import cases, names, test_dir
-
-PY_VER = sys.version_info[0]
-if sys.version_info[0] == 3:
-    # python3
-    from urllib.parse import urljoin
-else:
-    # python2.7
-    from urlparse import urljoin
 
 logger = logging.getLogger(__name__)
 
