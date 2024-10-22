@@ -148,6 +148,7 @@ class EdgeGridAuth(AuthBase):
 
         """
         # pylint: disable=invalid-name
+        # pylint: disable=too-many-positional-arguments
         self.ah = EdgeGridAuthHeaders(
             client_token,
             client_secret,
@@ -220,6 +221,7 @@ class EdgeGridAuthHeaders:
     """
     def __init__(self, client_token, client_secret, access_token,
                  headers_to_sign=(), max_body=131072):
+        # pylint: disable=too-many-positional-arguments
         self.client_token = client_token
         self.client_secret = client_secret
         self.access_token = access_token
@@ -289,6 +291,7 @@ class EdgeGridAuthHeaders:
         return header
 
     def make_data_to_sign(self, url, headers, auth_header, method, body):
+        # pylint: disable=too-many-positional-arguments
         parsed_url = urlparse(url)
 
         if headers.get('Host', False):
@@ -313,12 +316,14 @@ class EdgeGridAuthHeaders:
         return data_to_sign
 
     def sign_request(self, url, headers, method, body, timestamp, auth_header):
+        # pylint: disable=too-many-positional-arguments
         return base64_hmac_sha256(
             self.make_data_to_sign(url, headers, auth_header, method, body),
             self.make_signing_key(timestamp)
         )
 
     def make_auth_header(self, url, headers, method, body, timestamp, nonce):
+        # pylint: disable=too-many-positional-arguments
         kvps = [
             ('client_token', self.client_token),
             ('access_token', self.access_token),

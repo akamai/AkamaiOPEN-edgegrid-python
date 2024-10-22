@@ -1,4 +1,4 @@
-PYTHON = python3.10
+PYTHON = python3
 
 .PHONY: help
 help:
