@@ -134,7 +134,7 @@ class EdgeGridAuth(AuthBase):
     """
 
     def __init__(self, client_token, client_secret, access_token,
-                 headers_to_sign=(), max_body=131072):
+                 *, headers_to_sign=(), max_body=131072):
         """Initialize authentication using the given parameters from the Akamai OPEN APIs
            Interface:
 
@@ -148,13 +148,12 @@ class EdgeGridAuth(AuthBase):
 
         """
         # pylint: disable=invalid-name
-        # pylint: disable=too-many-positional-arguments
         self.ah = EdgeGridAuthHeaders(
             client_token,
             client_secret,
             access_token,
-            headers_to_sign,
-            max_body
+            headers_to_sign=headers_to_sign,
+            max_body=max_body
         )
 
     @staticmethod
@@ -190,26 +189,13 @@ class EdgeGridAuth(AuthBase):
             request_to_sign.url = redirect_location
 
             res.request.headers['Authorization'] = self.ah.make_auth_header(
-                request_to_sign.url,
-                request_to_sign.headers,
-                request_to_sign.method,
-                request_to_sign.body,
-                eg_timestamp(),
-                new_nonce()
-            )
+                request_to_sign, eg_timestamp(), new_nonce())
 
     def __call__(self, r):
         timestamp = eg_timestamp()
         nonce = new_nonce()
 
-        r.headers['Authorization'] = self.ah.make_auth_header(
-            r.url,
-            r.headers,
-            r.method,
-            r.body,
-            timestamp,
-            nonce
-        )
+        r.headers['Authorization'] = self.ah.make_auth_header(r, timestamp, nonce)
         r.register_hook('response', self.handle_redirect)
         return r
 
@@ -220,8 +206,7 @@ class EdgeGridAuthHeaders:
         Akamai {OPEN} EdgeGrid support.
     """
     def __init__(self, client_token, client_secret, access_token,
-                 headers_to_sign=(), max_body=131072):
-        # pylint: disable=too-many-positional-arguments
+                 *, headers_to_sign=(), max_body=131072):
         self.client_token = client_token
         self.client_secret = client_secret
         self.access_token = access_token
@@ -290,40 +275,37 @@ class EdgeGridAuthHeaders:
 
         return header
 
-    def make_data_to_sign(self, url, headers, auth_header, method, body):
-        # pylint: disable=too-many-positional-arguments
-        parsed_url = urlparse(url)
+    def make_data_to_sign(self, request, auth_header):
+        parsed_url = urlparse(request.url)
 
-        if headers.get('Host', False):
-            netloc = headers['Host']
+        if request.headers.get('Host', False):
+            netloc = request.headers['Host']
         else:
             netloc = parsed_url.netloc
 
-        self.get_header_versions(headers)
+        self.get_header_versions(request.headers)
 
         data_to_sign = '\t'.join([
-            method,
+            request.method,
             parsed_url.scheme,
             netloc,
             # Note: relative URL constraints are handled by requests when it sets up 'r'
             parsed_url.path + (';' + parsed_url.params if parsed_url.params else "") +
             ('?' + parsed_url.query if parsed_url.query else ""),
-            self.canonicalize_headers(headers),
-            self.make_content_hash(body or '', method),
+            self.canonicalize_headers(request.headers),
+            self.make_content_hash(request.body or '', request.method),
             auth_header
         ])
         logger.debug('data to sign: %s', '\\t'.join(data_to_sign.split('\t')))
         return data_to_sign
 
-    def sign_request(self, url, headers, method, body, timestamp, auth_header):
-        # pylint: disable=too-many-positional-arguments
+    def sign_request(self, request, timestamp, auth_header):
         return base64_hmac_sha256(
-            self.make_data_to_sign(url, headers, auth_header, method, body),
+            self.make_data_to_sign(request, auth_header),
             self.make_signing_key(timestamp)
         )
 
-    def make_auth_header(self, url, headers, method, body, timestamp, nonce):
-        # pylint: disable=too-many-positional-arguments
+    def make_auth_header(self, request, timestamp, nonce):
         kvps = [
             ('client_token', self.client_token),
             ('access_token', self.access_token),
@@ -335,7 +317,7 @@ class EdgeGridAuthHeaders:
         logger.debug('unsigned authorization header: %s', auth_header)
 
         signed_auth_header = auth_header + \
-            'signature=' + self.sign_request(url, headers, method, body, timestamp, auth_header)
+            'signature=' + self.sign_request(request, timestamp, auth_header)
 
         logger.debug('signed authorization header: %s', signed_auth_header)
         return signed_auth_header

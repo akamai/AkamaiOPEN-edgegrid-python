@@ -88,25 +88,19 @@ def test_edge_grid(testdata, testcase):
         data=testcase['request'].get('data')
     )
 
+    # The auth plugin is called on a PreparedRequest object, not a Request (see
+    # PreparedRequest.prepare()). That's why we want req to be a PreparedRequest
+    # in order to test make_auth_header with proper data.
     if testcase.get('failsWithMessage') is None:
         req = req.prepare()
-        data_to_sign = auth.ah.make_data_to_sign(req.url, req.headers, "", req.method, req.body)
-        auth_header = auth.ah.make_auth_header(
-            req.url, req.headers, req.method, req.body, testdata['timestamp'],
-            testdata['nonce']
-        )
+        data_to_sign = auth.ah.make_data_to_sign(req, "")
+        auth_header = auth.ah.make_auth_header(req, testdata['timestamp'], testdata['nonce'])
         assert auth_header == testcase['expectedAuthorization']
         assert data_to_sign == testcase['expectedDataToSign']
     else:
-        with pytest.raises(Exception) as exception:
-            req = req.prepare()
-            auth.ah.make_data_to_sign(req.url, req.headers, "", req.method, req.body)
-            auth.ah.make_auth_header(
-                req.url, req.headers, req.method, req.body, testdata['timestamp'],
-                testdata['nonce']
-            )
-            logger.debug('Got exception from make_auth_header', exc_info=True)
-            assert str(exception) == testcase['failsWithMessage']
+        with pytest.raises(Exception) as exc_info:
+            req.prepare()
+        assert str(exc_info.value) == testcase['failsWithMessage']
 
 
 def test_nonce():
@@ -362,10 +356,7 @@ def test_json(testdata):
     )
 
     req = request.prepare()
-    auth_header = auth.ah.make_auth_header(
-        req.url, req.headers, req.method, req.body, testdata['timestamp'],
-        testdata['nonce']
-    )
+    auth_header = auth.ah.make_auth_header(req, testdata['timestamp'], testdata['nonce'])
 
     assert auth_header == testdata['jsontest_hash']
 
@@ -394,8 +385,6 @@ def test_multipart_encoder(testdata, multipart_fields):
     )
 
     req = request.prepare()
-    auth_header = auth.ah.make_auth_header(
-        req.url, req.headers, req.method, req.body, testdata["timestamp"], testdata["nonce"]
-    )
+    auth_header = auth.ah.make_auth_header(req, testdata["timestamp"], testdata["nonce"])
 
     assert auth_header == testdata["multipart_hash_test"]
