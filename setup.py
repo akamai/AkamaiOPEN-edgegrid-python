@@ -7,15 +7,22 @@ setup(
     url='https://github.com/akamai/AkamaiOPEN-edgegrid-python',
     namespace_packages=['akamai'],
     packages=find_packages(),
-    python_requires=">=3.6",
+    python_requires=">=3.9",
     install_requires=[
-        'requests>=2.3.0',
-        'requests_toolbelt>=0.9.0',
-        'pyOpenSSL>=19.0.0',
-        'ndg-httpsclient',
-        'pyasn1',
-        'urllib3'
+        'requests>=2.24.0',
+        'requests_toolbelt>=0.9.1',
+        'pyOpenSSL>=19.1.0',
+        'ndg-httpsclient>=0.5.1',
+        'pyasn1>=0.4.8',
+        'urllib3>=1.25.10'
     ],
+    extras_require={
+        'dev': [
+            'pylint>=2.7.0',
+            'pytest>=6.1.0',
+            'pytest-cov>=2.12.1'
+        ],
+    },
     include_package_data=True,
     license='Apache 2.0',
     classifiers=[

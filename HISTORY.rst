@@ -7,9 +7,14 @@ X.X.X (X-X-X)
 ++++++++++++++++++
 
 * Breaking changes
-    - discontinue support for Python 2.7, the minimum supported version is now Python 3.6
+    - discontinue support for Python 2.7, the minimum supported version is now Python 3.9
     - the ``__init__`` function of ``EdgeGridAuth`` and ``EdgeGridAuthHeaders`` now accepts ``headers_to_sign`` and ``max_body`` as keyword-only arguments
     - changed signatures of following methods in the ``EdgeGridAuthHeaders`` class: ``make_auth_header``, ``sign_request`` and ``make_data_to_sign``
+
+* Improvements
+    - update several dependencies in ``setup.py``
+    - start generating files ``requirements.txt`` and ``dev-requirements.txt`` using ``pip-compile``,
+      so that they contain the full set of project dependencies
 
 * Bug fixes
     - properly handle file objects in the request body in EdgeGridAuth
