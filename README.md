@@ -1,148 +1,282 @@
 # EdgeGrid for Python
 
-This library implements an authentication handler for HTTP [requests](https://requests.readthedocs.io/en/latest/) using the [EdgeGrid authentication](https://techdocs.akamai.com/developer/docs/authenticate-with-edgegrid) scheme.
-
-## Prerequisites
-Before you begin, you need to [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials) in [Control Center](https://control.akamai.com/).
-
-Download the Python release compatible with your operating system at [https://www.python.org/downloads/](https://www.python.org/downloads/).
-
-> Python 2 is no longer supported by the [Python Software Foundation](https://www.python.org/doc/sunset-python-2/).
-  However, if you're still using it, you can follow the [Python 2 steps](#python-2-steps).
+This library implements an Authentication handler for [HTTP requests](https://requests.readthedocs.io/en/latest/) using the [Akamai EdgeGrid Authentication](https://techdocs.akamai.com/developer/docs/authenticate-with-edgegrid) scheme for Python.
 
 ## Install
 
-1.  Install Python.
-    ```
-    python setup.py install
-    ```
+To use the library, you need to have Python 3.9 or later installed on your system. You can download it from [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
-1. Install the developer libraries for Python, SSL and FFI.
-    ```
-    sudo apt-get install ibssl-dev libffi-dev python-dev
-    ```
+> __NOTE:__ Python 2 is no longer supported by the [Python Software Foundation](https://www.python.org/doc/sunset-python-2/). You won't be able to use the library with Python 2.
 
-1. Install the `edgegrid-python` authentication handler.
-    ```
-    pip install edgegrid-python
-    ```
+Then, install the `edgegrid-python` authentication handler from sources by running this command from the project root directory:
 
-## Make an API call
+   ```
+   pip install .
+   ```
 
-To use Akamai APIs, you need the values for the tokens from your [.edgerc file](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials#add-credential-to-edgerc-file).
+Alternatively, you can install it from PyPI (Python Package Index) by running:
 
-```pycon
->>> import requests
->>> from akamai.edgegrid import EdgeGridAuth
->>> from urllib.parse import urljoin
->>> baseurl = 'https://akaa-WWWWWWWWWWWW.luna.akamaiapis.net/'
->>> s = requests.Session()
->>> s.auth = EdgeGridAuth(
-    client_token='ccccccccccccccccc',
-    client_secret='ssssssssssssssssss',
-    access_token='aaaaaaaaaaaaaaaaaaaaa'
-)
-
->>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v2/ghost-locations/available'))
->>> result.status_code
-200
->>> result.json()['locations'][0]['value']
-Oakbrook, IL, United States
-...
+```
+pip install edgegrid-python
 ```
 
-This is an example of an API call to [List available edge server locations](https://techdocs.akamai.com/diagnostic-tools/reference/ghost-locationsavailable). Change the `baseurl` element to reference an endpoint in any of the [Akamai APIs](https://techdocs.akamai.com/home/page/products-tools-a-z?sort=api).
+## Authentication
 
-Alternatively, your program can read the credential values directly from the `.edgerc`.
+We provide authentication credentials through an API client. Requests to the API are signed with a timestamp and are executed immediately.
 
-```pycon
->>> import requests
->>> from akamai.edgegrid import EdgeGridAuth, EdgeRc
->>> from urllib.parse import urljoin
+1. [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials).
+   
+2. Place your credentials in an EdgeGrid resource file, `.edgerc`, under a heading of `[default]` at your local home directory or the home directory of a web-server user.
+   
+   ```
+    [default]
+    client_secret = C113nt53KR3TN6N90yVuAgICxIRwsObLi0E67/N8eRN=
+    host = akab-h05tnam3wl42son7nktnlnnx-kbob3i3v.luna.akamaiapis.net
+    access_token = akab-acc35t0k3nodujqunph3w7hzp7-gtm6ij
+    client_token = akab-c113ntt0k3n4qtari252bfxxbsl-yvsdj
+    ```
 
->>> edgerc = EdgeRc('~/.edgerc')
->>> section = 'default'
->>> baseurl = 'https://%s' % edgerc.get(section, 'host')
+3. Use your local `.edgerc` by providing the path to your resource file and credentials' section header.
+   
+   ```python
+    import requests
+    from akamai.edgegrid import EdgeGridAuth, EdgeRc
 
->>> s = requests.Session()
->>> s.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+    edgerc = EdgeRc('~/.edgerc')
+    section = 'default'
+    baseurl = 'https://%s' % edgerc.get(section, 'host')
 
->>> result = s.get(urljoin(baseurl, '/diagnostic-tools/v2/ghost-locations/available'))
->>> result.status_code
-200
->>> result.json()['locations'][0]['value']
-Oakbrook, IL, United States
-...
+    session = requests.Session()
+    session.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+   ```
+   Or hard code them as variables.
+   
+   ```python
+    import requests
+    from akamai.edgegrid import EdgeGridAuth
+
+    session = requests.Session()
+    session.auth = EdgeGridAuth(
+        client_token='akab-c113ntt0k3n4qtari252bfxxbsl-yvsdj',
+        client_secret='C113nt53KR3TN6N90yVuAgICxIRwsObLi0E67/N8eRN=',
+        access_token='akab-acc35t0k3nodujqunph3w7hzp7-gtm6ij'
+    )
+   ```
+
+## Use
+
+To use the library, provide the path to your `.edgerc`, your credentials section header, and the appropriate endpoint information.
+
+```python
+import requests
+import json
+from akamai.edgegrid import EdgeGridAuth, EdgeRc
+from urllib.parse import urljoin
+
+edgerc = EdgeRc('~/.edgerc')
+section = 'default'
+baseurl = 'https://%s' % edgerc.get(section, 'host')
+
+session = requests.Session()
+session.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+path = '/identity-management/v3/user-profile'
+headers = {
+  "Accept": "application/json"
+} 
+querystring = {
+  "actions": True,
+  "authGrants": True,
+  "notifications": True
+}  
+
+result = session.get(urljoin(baseurl, path), headers=headers, params=querystring)
+print(result.status_code)
+print(json.dumps(result.json(), indent=2))
 ```
 
-> NOTE: If your `.edgerc` file contains more than one credential set, use the `section` argument to specify which section contains the credentials for your API request.
+### Query string parameters
+
+When entering query parameters use the `querystring` property. Set up the parameters as name-value pairs in an object.
+
+```python
+edgerc = EdgeRc('~/.edgerc')
+section = 'default'
+baseurl = 'https://%s' % edgerc.get(section, 'host')
+
+session = requests.Session()
+session.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+path = '/identity-management/v3/user-profile'
+querystring = {
+  "actions": True,
+  "authGrants": True,
+  "notifications": True
+}  
+
+result = session.get(urljoin(baseurl, path), params=querystring)
+```
+
+### Headers
+
+Enter request headers in the `headers` property as name-value pairs in an object.
+
+> __NOTE:__ You don't need to include the `Content-Type` and `Content-Length` headers. The authentication layer adds these values.
+
+```python
+edgerc = EdgeRc('~/.edgerc')
+section = 'default'
+baseurl = 'https://%s' % edgerc.get(section, 'host')
+
+session = requests.Session()
+session.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+path = '/identity-management/v3/user-profile'
+headers = {
+  "Accept": "application/json"
+} 
+
+result = session.get(urljoin(baseurl, path), headers=headers)
+```
+
+### Body data
+
+Provide the request body as an object in the `payload` property.
+
+```python
+edgerc = EdgeRc('~/.edgerc')
+section = 'default'
+baseurl = 'https://%s' % edgerc.get(section, 'host')
+
+session = requests.Session()
+session.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+path = '/identity-management/v3/user-profile/basic-info'
+payload = {
+    "contactType": "Billing",
+    "country": "USA",
+    "firstName": "John",
+    "lastName": "Smith",
+    "preferredLanguage": "English",
+    "sessionTimeOut": 30,
+    "timeZone": "GMT",
+    "phone": "3456788765"
+}
+
+result = session.put(urljoin(baseurl, path), json=payload)
+```
+
+As the `data` parameter for the `session` methods, EdgeGrid for Python
+currently supports the `bytes` and `requests_toolbelt.MultipartEncoder`
+types or a file-like object.
+
+### Debug
+
+Enable debugging to get additional information about a request.
+
+To log requests, use the built-in request logging. Add this before making a request:
+
+```python
+import logging
+from http.client import HTTPConnection
+HTTPConnection.debuglevel = 1
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+urllib_log = logging.getLogger("urllib3")
+urllib_log.setLevel(logging.DEBUG)
+urllib_log.propagate = True
+```
+
+This will print everything apart from the HTTP response body. See the [Requests library for Python](https://requests.readthedocs.io/en/latest/api/#api-changes) for the original recipe.
+
+To log specific parts like URL, status code, headers, or body, add this:
+
+```python
+import requests
+import logging
+import json
+from akamai.edgegrid import EdgeGridAuth, EdgeRc
+from urllib.parse import urljoin
+
+logger = logging.getLogger('requests_logger')
+logging.basicConfig(level=logging.DEBUG)
+
+edgerc = EdgeRc('~/.edgerc')
+section = 'default'
+baseurl = 'https://%s' % edgerc.get(section, 'host')
+
+session = requests.Session()
+session.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+path = '/identity-management/v3/user-profile'
+
+result = session.get(urljoin(baseurl, path))
+logger.debug(f'URL: {result.url}')
+logger.debug(f'Status Code: {result.status_code}')
+logger.debug(f'Headers: {result.headers}')
+logger.debug(f'Body: {result.json()}')
+```
 
 ## Virtual environment
 
-To test in a [virtual environment](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments), run:
+A [virtual environment](https://docs.python.org/3/library/venv.html) is a tool to keep dependencies required by different projects in separate places. The `venv` module is included in Python 3 by default.
 
-```
-$ python3 -m venv venv
-$ . venv/bin/activate
-$ pip install -r requirements.txt
-$ python -m unittest discover
-```
+Set up a virtual environment:
 
-### Python 2 steps
+1. Initialize your environment in a new directory.
 
-Python 2.7 is no longer supported by the [Python Software Foundation](https://www.python.org/doc/sunset-python-2/), but we recognize that some developers continue to use it. If you're using Python 2.7 with EdgeGrid, follow these steps.
+   ```
+   // Unix/macOS
+   python3 -m venv ~/Desktop/myenv
 
-1. To upgrade the cryptography package, first run:
-    ```
-    pip install --upgrade 'cryptography<3.4'
-    ```
+   // Windows
+   py -m venv ~/Desktop/myenv
+   ```
 
-1. To continue with the installation, run:
-    ```
-    pip install edgegrid-python
-    ```
+   This creates a `venv` in the specified directory as well as copies pip into it.
 
-    or install from sources:
-    ```
-    python setup.py install
-    ```
+2. Activate your environment.
+   
+   ```
+   // Unix/macOS
+   source ~/Desktop/myenv/bin/activate
 
-1. To test, run:
-    ```
-    $ virtualenv -p python2.7 venv
-    $ . venv/bin/activate
-    $ pip install 'cryptography<3.4' # just necessary for Python 2.7
-    $ pip install -r requirements.txt
-    $ python -m unittest discover
-    ```
+   // Windows
+   ~/Desktop/myenv/Scripts/activate
+   ```
 
-> If you intend to run the examples with Python 2.7, remember that `urljoin` is contained in a different package.
-    ```
-    from urlparse import urljoin
-    ```
+   Your prompt will change to show you're working in a virtual environment, for example:
 
-## Contribute
+   ```
+   (myenv) jsmith@abc-de12fg $
+   ```
 
-1.  Fork the [repository](https://github.com/akamai-open/AkamaiOPEN-edgegrid-python) to modify the **master** branch.
-2.  Write a test that demonstrates that the bug was fixed or the feature works as expected.
-3.  Send a pull request and nudge the maintainer until it gets merged and published. :)
+3. To recreate the environment, install the required dependencies within your project.
 
-## Author
+   ```
+   pip install -r dev-requirements.txt
+   ```
 
-Jonathan Landis
+4. Run the tests.
+
+   ```
+   // Unix/macOS
+   pytest -v
+
+   // Windows
+   py -m pytest -v
+   ```
+
+5. To deactivate your environment, run the `deactivate` command.
+
+## Reporting issues
+
+To report an issue or make a suggestion, create a new [GitHub issue](https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues).
 
 ## License
 
-> Copyright 2022 Akamai Technologies, Inc. All rights reserved.
->
-> Licensed under the Apache License, Version 2.0 (the \"License\"); you
-> may not use this file except in compliance with the License. You may
-> obtain a copy of the License at
->
-> > <http://www.apache.org/licenses/LICENSE-2.0>
->
-> Unless required by applicable law or agreed to in writing, software
-> distributed under the License is distributed on an \"AS IS\" BASIS,
-> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-> implied. See the License for the specific language governing
-> permissions and limitations under the License.
+Copyright 2024 Akamai Technologies, Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
