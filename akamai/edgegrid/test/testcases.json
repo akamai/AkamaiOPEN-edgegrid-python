@@ -198,6 +198,16 @@
     "expectedDataToSign": "PUT\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t6\t\t\t"
   },
   {
+    "testName": "PATCH test",
+    "request": {
+      "method": "PATCH",
+      "path": "/testapi/v1/t6",
+      "data": "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"
+    },
+    "expectedAuthorization": "EG1-HMAC-SHA256 client_token=akab-client-token-xxx-xxxxxxxxxxxxxxxx;access_token=akab-access-token-xxx-xxxxxxxxxxxxxxxx;timestamp=20140321T19:34:21+0000;nonce=nonce-xx-xxxx-xxxx-xxxx-xxxxxxxxxxxx;signature=JIl05ImY1AOnMtmw+9LKgaFA8mnzsEKabbnHmI8LsQ4=",
+    "expectedDataToSign": "PATCH\thttps\takaa-baseurl-xxxxxxxxxxx-xxxxxxxxxxxxx.luna.akamaiapis.net\t/testapi/v1/t6\t\t\t"
+  },
+  {
     "testName": "GET with query params",
     "request": {
       "method": "GET",
