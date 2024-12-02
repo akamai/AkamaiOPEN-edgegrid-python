@@ -42,7 +42,7 @@ pycparser==2.22
     # via cffi
 pylint==3.3.1
     # via edgegrid-python (setup.py)
-pyopenssl==24.2.1
+pyopenssl==24.3.0
     # via
     #   edgegrid-python (setup.py)
     #   ndg-httpsclient

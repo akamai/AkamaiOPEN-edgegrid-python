@@ -22,7 +22,7 @@ pyasn1==0.6.1
     #   ndg-httpsclient
 pycparser==2.22
     # via cffi
-pyopenssl==24.2.1
+pyopenssl==24.3.0
     # via
     #   edgegrid-python (setup.py)
     #   ndg-httpsclient
