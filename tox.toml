@@ -1,0 +1,11 @@
+requires = ["tox>=4"]
+env_list = ["py39", "py310", "py311", "py312", "py313"]
+no_package = true
+
+[env_run_base]
+description = "run unit tests"
+deps = ["-r dev-requirements.txt", "-e ."]
+commands_pre = [["pylint", "akamai"]]
+# For simplicity, pass only the latest cov report to Cobertura (previous will be overwritten)
+commands = [["pytest", "-v", "--junit-xml=test/{envname}_tests.xml", "-o", "junit_family=xunit2",
+    "--cov-report", "xml:test/coverage/cobertura-coverage.xml", "--cov=akamai"]]
