@@ -25,9 +25,9 @@ pip install edgegrid-python
 We provide authentication credentials through an API client. Requests to the API are signed with a timestamp and are executed immediately.
 
 1. [Create authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials).
-   
-2. Place your credentials in an EdgeGrid resource file, `.edgerc`, under a heading of `[default]` at your local home directory or the home directory of a web-server user.
-   
+
+2. Place your credentials in an EdgeGrid resource file, `.edgerc`, under a heading of `[default]` at your local home directory.
+
    ```
     [default]
     client_secret = C113nt53KR3TN6N90yVuAgICxIRwsObLi0E67/N8eRN=
@@ -275,8 +275,8 @@ To report an issue or make a suggestion, create a new [GitHub issue](https://git
 
 ## License
 
-Copyright 2024 Akamai Technologies, Inc. All rights reserved.
+Copyright 2025 Akamai Technologies, Inc. All rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use these files except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
