@@ -6,26 +6,10 @@
 #
 certifi==2024.8.30
     # via requests
-cffi==1.17.1
-    # via cryptography
 charset-normalizer==3.4.0
     # via requests
-cryptography==43.0.3
-    # via pyopenssl
 idna==3.10
     # via requests
-ndg-httpsclient==0.5.1
-    # via edgegrid-python (setup.py)
-pyasn1==0.6.1
-    # via
-    #   edgegrid-python (setup.py)
-    #   ndg-httpsclient
-pycparser==2.22
-    # via cffi
-pyopenssl==24.2.1
-    # via
-    #   edgegrid-python (setup.py)
-    #   ndg-httpsclient
 requests==2.32.3
     # via
     #   edgegrid-python (setup.py)
@@ -33,6 +17,4 @@ requests==2.32.3
 requests-toolbelt==1.0.0
     # via edgegrid-python (setup.py)
 urllib3==2.2.3
-    # via
-    #   edgegrid-python (setup.py)
-    #   requests
+    # via requests

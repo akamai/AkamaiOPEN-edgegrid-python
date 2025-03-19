@@ -8,14 +8,10 @@ astroid==3.3.5
     # via pylint
 certifi==2024.8.30
     # via requests
-cffi==1.17.1
-    # via cryptography
 charset-normalizer==3.4.0
     # via requests
 coverage[toml]==7.6.4
     # via pytest-cov
-cryptography==43.0.3
-    # via pyopenssl
 dill==0.3.9
     # via pylint
 idna==3.10
@@ -26,26 +22,14 @@ isort==5.13.2
     # via pylint
 mccabe==0.7.0
     # via pylint
-ndg-httpsclient==0.5.1
-    # via edgegrid-python (setup.py)
 packaging==24.1
     # via pytest
 platformdirs==4.3.6
     # via pylint
 pluggy==1.5.0
     # via pytest
-pyasn1==0.6.1
-    # via
-    #   edgegrid-python (setup.py)
-    #   ndg-httpsclient
-pycparser==2.22
-    # via cffi
 pylint==3.3.1
     # via edgegrid-python (setup.py)
-pyopenssl==24.2.1
-    # via
-    #   edgegrid-python (setup.py)
-    #   ndg-httpsclient
 pytest==8.3.3
     # via
     #   edgegrid-python (setup.py)
@@ -61,9 +45,7 @@ requests-toolbelt==1.0.0
 tomlkit==0.13.2
     # via pylint
 urllib3==2.2.3
-    # via
-    #   edgegrid-python (setup.py)
-    #   requests
+    # via requests
 
 
 # THIS SECTION WAS ADDED MANUALLY

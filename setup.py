@@ -11,10 +11,6 @@ setup(
     install_requires=[
         'requests>=2.24.0',
         'requests_toolbelt>=0.9.1',
-        'pyOpenSSL>=19.1.0',
-        'ndg-httpsclient>=0.5.1',
-        'pyasn1>=0.4.8',
-        'urllib3>=1.25.10'
     ],
     extras_require={
         'dev': [
