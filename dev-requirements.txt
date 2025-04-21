@@ -28,7 +28,7 @@ mccabe==0.7.0
     # via pylint
 ndg-httpsclient==0.5.1
     # via edgegrid-python (setup.py)
-packaging==24.1
+packaging==25.0
     # via pytest
 platformdirs==4.3.6
     # via pylint
