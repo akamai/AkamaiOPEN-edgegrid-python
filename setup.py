@@ -8,6 +8,8 @@ setup(
     namespace_packages=['akamai'],
     packages=find_packages(),
     python_requires=">=3.9",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     install_requires=[
         'requests>=2.24.0',
         'requests_toolbelt>=0.9.1',

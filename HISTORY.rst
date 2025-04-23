@@ -6,6 +6,7 @@ X.X.X (X-X-X)
 ++++++++++++++++++
 * Bug fixes
     - `GH#79 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/79>`_: removed unused pyOpenSSL library
+    - Added readme to package metadata
 
 
 2.0.0 (2024-11-13)
