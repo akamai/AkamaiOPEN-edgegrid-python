@@ -19,6 +19,10 @@ clean:
 test:
 	@. venv/bin/activate; pytest --junitxml $(CURDIR)/test/tests.xml --cov-report xml:$(CURDIR)/test/coverage/cobertura-coverage.xml --cov=akamai
 
+.PHONY: test-docker
+test-docker:
+	sh ci/test_with_docker.sh
+
 .PHONY: lint
 lint:
 	@. venv/bin/activate; pylint ./akamai
