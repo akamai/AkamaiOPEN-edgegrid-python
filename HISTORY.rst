@@ -2,11 +2,12 @@
 
 History
 -------
-X.X.X (X-X-X)
+2.0.1 (2025-04-24)
 ++++++++++++++++++
 * Bug fixes
     - `GH#79 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/79>`_: removed unused pyOpenSSL library
-    - Added readme to package metadata
+    - Added ``README.md`` to package metadata
+    - Updated various dependencies to remove vulnerabilities
 
 
 2.0.0 (2024-11-13)

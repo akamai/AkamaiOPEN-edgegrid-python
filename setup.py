@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='edgegrid-python',
-    version='2.0.0',
+    version='2.0.1',
     description='{OPEN} client authentication protocol for python-requests',
     url='https://github.com/akamai/AkamaiOPEN-edgegrid-python',
     namespace_packages=['akamai'],
