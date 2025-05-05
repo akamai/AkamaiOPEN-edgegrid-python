@@ -28,7 +28,7 @@ platformdirs==4.3.7
     # via pylint
 pluggy==1.5.0
     # via pytest
-pylint==3.3.6
+pylint==3.3.7
     # via edgegrid-python (setup.py)
 pytest==8.3.5
     # via
