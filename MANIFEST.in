@@ -1,6 +1,7 @@
 include README.rst
 include LICENSE
 include requirements.txt
+include akamai/edgegrid/test/testcases.json
 include akamai/edgegrid/test/testdata.json
 include akamai/edgegrid/test/sample_edgerc
 include akamai/edgegrid/test/edgerc_that_doesnt_parse
