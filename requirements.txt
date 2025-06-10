@@ -10,7 +10,7 @@ charset-normalizer==3.4.1
     # via requests
 idna==3.10
     # via requests
-requests==2.32.3
+requests==2.32.4
     # via
     #   edgegrid-python (setup.py)
     #   requests-toolbelt

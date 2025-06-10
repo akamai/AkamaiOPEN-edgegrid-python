@@ -36,7 +36,7 @@ pytest==8.3.5
     #   pytest-cov
 pytest-cov==6.1.1
     # via edgegrid-python (setup.py)
-requests==2.32.3
+requests==2.32.4
     # via
     #   edgegrid-python (setup.py)
     #   requests-toolbelt
