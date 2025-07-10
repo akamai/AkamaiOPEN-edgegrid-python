@@ -2,13 +2,20 @@
 
 History
 -------
+2.0.2 (2025-07-14)
+++++++++++++++++++
+
+* Improvements
+    - Updated dependencies to address security vulnerabilities
+    - `GH#94 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/pull/94>`_: include testcases.json in source distribution
+
 2.0.1 (2025-04-24)
 ++++++++++++++++++
+
 * Bug fixes
     - `GH#79 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/issues/79>`_: removed unused pyOpenSSL library
     - Added ``README.md`` to package metadata
     - Updated various dependencies to remove vulnerabilities
-
 
 2.0.0 (2024-11-13)
 ++++++++++++++++++

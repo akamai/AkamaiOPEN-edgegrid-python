@@ -4,17 +4,17 @@
 #
 #    pip-compile
 #
-certifi==2025.1.31
+certifi==2025.6.15
     # via requests
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
     # via requests
 idna==3.10
     # via requests
-requests==2.32.3
+requests==2.32.4
     # via
     #   edgegrid-python (setup.py)
     #   requests-toolbelt
 requests-toolbelt==1.0.0
     # via edgegrid-python (setup.py)
-urllib3==2.4.0
+urllib3==2.5.0
     # via requests
