@@ -30,7 +30,7 @@ pluggy==1.5.0
     # via pytest
 pylint==3.3.7
     # via edgegrid-python (setup.py)
-pytest==8.3.5
+pytest==8.4.1
     # via
     #   edgegrid-python (setup.py)
     #   pytest-cov
