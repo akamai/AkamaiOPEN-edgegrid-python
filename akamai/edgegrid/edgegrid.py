@@ -276,7 +276,7 @@ class EdgeGridAuthHeaders:
         return header
 
     def make_data_to_sign(self, request, auth_header):
-        parsed_url = urlparse(request.url)
+        parsed_url = urlparse(str(request.url))
 
         if request.headers.get('Host', False):
             netloc = request.headers['Host']
