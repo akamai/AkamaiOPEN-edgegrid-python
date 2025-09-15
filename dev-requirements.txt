@@ -34,7 +34,7 @@ pytest==8.3.5
     # via
     #   edgegrid-python (setup.py)
     #   pytest-cov
-pytest-cov==6.1.1
+pytest-cov==7.0.0
     # via edgegrid-python (setup.py)
 requests==2.32.4
     # via
