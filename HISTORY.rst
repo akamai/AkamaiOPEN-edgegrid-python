@@ -2,6 +2,15 @@
 
 History
 -------
+2.0.3 (2025-11-19)
+++++++++++++++++++
+
+* Improvements
+    - Updated dependencies to address security vulnerabilities
+    - Dropped support for Python 3.9, the minimum supported version is now Python 3.10
+    - Added support for Python 3.14
+    - `GH#101 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/pull/101>`_: include sample_file.txt in source distribution
+
 2.0.2 (2025-07-14)
 ++++++++++++++++++
 
