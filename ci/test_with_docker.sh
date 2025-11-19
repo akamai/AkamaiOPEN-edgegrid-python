@@ -9,5 +9,5 @@ docker build -t "$IMAGE" "$REPO_ROOT/ci"
 echo "Running unit tests inside the container..."
 set -x
 # umask 0000: provide permissive access rights to files created as root on the mounted volume.
-CMD=". ~/.profile && umask 0000 && pyenv local 3.9 3.10 3.11 3.12 3.13 && tox"
+CMD=". ~/.profile && umask 0000 && pyenv local 3.10 3.11 3.12 3.13 3.14 && tox"
 docker run --rm -v $REPO_ROOT:/testdir -w /testdir "$IMAGE" sh -c "$CMD"

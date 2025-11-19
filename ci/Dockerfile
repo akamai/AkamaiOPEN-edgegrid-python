@@ -7,7 +7,7 @@ RUN apk add --no-cache curl
 RUN curl https://pyenv.run | bash
 ENV PYENV_ROOT="/root/.pyenv"
 ENV PATH="$PYENV_ROOT/bin:$PATH"
-RUN pyenv install 3.9 3.10 3.11 3.12 3.13
+RUN pyenv install 3.10 3.11 3.12 3.13 3.14
 RUN echo 'eval "$(pyenv init -)"' >> ~/.profile
 
 RUN pip install --no-cache-dir tox
