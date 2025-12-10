@@ -24,7 +24,7 @@ mccabe==0.7.0
     # via pylint
 packaging==25.0
     # via pytest
-platformdirs==4.5.0
+platformdirs==4.5.1
     # via pylint
 pluggy==1.6.0
     # via
@@ -32,9 +32,9 @@ pluggy==1.6.0
     #   pytest-cov
 pygments==2.19.2
     # via pytest
-pylint==4.0.3
+pylint==4.0.4
     # via edgegrid-python (setup.py)
-pytest==9.0.1
+pytest==9.0.2
     # via
     #   edgegrid-python (setup.py)
     #   pytest-cov
@@ -48,7 +48,7 @@ requests-toolbelt==1.0.0
     # via edgegrid-python (setup.py)
 tomlkit==0.13.3
     # via pylint
-urllib3==2.5.0
+urllib3==2.6.1
     # via requests
 
 
