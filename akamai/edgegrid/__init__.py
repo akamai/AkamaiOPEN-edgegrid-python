@@ -38,4 +38,4 @@ __all__ = ['EdgeGridAuth', 'EdgeRc']
 __title__ = 'edgegrid-python'
 __version__ = '2.0.4'
 __license__ = 'Apache 2.0'
-__copyright__ = 'Copyright 2025 Akamai Technologies'
+__copyright__ = 'Copyright 2026 Akamai Technologies'
