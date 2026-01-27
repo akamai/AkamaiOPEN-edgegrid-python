@@ -2,6 +2,12 @@
 
 History
 -------
+2.0.5 (2026-01-27)
+++++++++++++++++++
+
+* Improvements
+    - Updated dependencies to address security vulnerabilities
+
 2.0.4 (2025-12-10)
 ++++++++++++++++++
 
