@@ -46,7 +46,7 @@ requests==2.32.5
     #   requests-toolbelt
 requests-toolbelt==1.0.0
     # via edgegrid-python (setup.py)
-tomlkit==0.13.3
+tomlkit==0.14.0
     # via pylint
 urllib3==2.6.3
     # via requests
