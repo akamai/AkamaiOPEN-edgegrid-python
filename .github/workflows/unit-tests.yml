@@ -1,11 +1,9 @@
 name: Unit Tests
 
 on:
-  push:
-    branches: ["**"]
   pull_request:
-    branches: ["**"]
-
+  push:
+    branches: [ main ]
 jobs:
   test:
     name: Python ${{ matrix.python-version }}
