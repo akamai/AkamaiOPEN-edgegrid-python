@@ -51,3 +51,25 @@ jobs:
         with:
           name: test-results-${{ matrix.python-version }}
           path: test/
+
+  report:
+    name: Test Report
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    # permissions:
+    #   checks: write
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          merge-multiple: false
+
+      - name: Publish test report
+        # dorny/test-reporter v2.6.0 — pinned to SHA for supply-chain safety
+        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f
+        with:
+          name: Pytest Results
+          path: "test-results-*/tests.xml"
+          reporter: java-junit
