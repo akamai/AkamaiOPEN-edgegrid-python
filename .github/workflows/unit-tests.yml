@@ -29,6 +29,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r dev-requirements.txt
 
+      - name: Remove legacy namespace package declaration
+        # Temporary workaround: pkg_resources is no longer pre-installed in Python 3.12+,
+        # causing an import error at test collection time. This removes the legacy
+        # declare_namespace() call so tests can run without requiring pkg_resources.
+        run: sed -i "/declare_namespace/d" akamai/__init__.py
+
       - name: Lint
         run: pylint akamai
 
