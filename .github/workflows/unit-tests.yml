@@ -84,3 +84,4 @@ jobs:
           filename: "test-results-*/coverage/cobertura-coverage.xml"
           format: markdown
           output: both
+          badge: true
