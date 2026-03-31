@@ -84,4 +84,6 @@ jobs:
           filename: "test-results-*/coverage/cobertura-coverage.xml"
           format: markdown
           output: both
-          badge: true
+
+      - name: Write coverage to job summary
+        run: cat code-coverage-results.md >> "$GITHUB_STEP_SUMMARY"
