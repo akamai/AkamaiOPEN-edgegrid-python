@@ -76,14 +76,3 @@ jobs:
           name: Pytest Results
           path: "test-results-*/tests.xml"
           reporter: java-junit
-
-      - name: Publish coverage summary
-        # irongut/CodeCoverageSummary v1.3.0 — pinned to SHA for supply-chain safety
-        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95
-        with:
-          filename: "test-results-*/coverage/cobertura-coverage.xml"
-          format: markdown
-          output: both
-
-      - name: Write coverage to job summary
-        run: cat code-coverage-results.md >> "$GITHUB_STEP_SUMMARY"
