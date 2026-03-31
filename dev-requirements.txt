@@ -50,3 +50,9 @@ tomlkit==0.13.3
     # via pylint
 urllib3==2.6.3
     # via requests
+
+
+# THIS SECTION WAS ADDED MANUALLY
+# Starting with version 3.12, setuptools is no longer included in the standard Python installation.
+# However, we still need it until we get rid of pkg_resource style namespace packages.
+setuptools
