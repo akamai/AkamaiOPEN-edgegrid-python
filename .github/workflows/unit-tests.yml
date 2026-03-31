@@ -60,6 +60,9 @@ jobs:
     # permissions:
     #   checks: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Download test results
         uses: actions/download-artifact@v4
         with:
