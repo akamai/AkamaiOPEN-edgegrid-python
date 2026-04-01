@@ -27,7 +27,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install dependencies
-        run: pip install -r dev-requirements.txt
+        run: python -m pip install -r dev-requirements.txt
 
       - name: Remove legacy namespace package declaration
         # Temporary workaround: pkg_resources is no longer pre-installed in Python 3.12+,
