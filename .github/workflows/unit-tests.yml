@@ -3,7 +3,7 @@ name: Unit Tests
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   schedule:
     - cron: "0 3 * * *"  # 03:00 UTC daily
 
