@@ -6,6 +6,7 @@ on:
     branches: [ main, master ]
   schedule:
     - cron: "0 3 * * *"  # 03:00 UTC daily
+  workflow_dispatch:
 
 jobs:
   test:
