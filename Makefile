@@ -8,7 +8,7 @@ help:
 
 .PHONY: install
 install:
-	$(PYTHON) -m venv venv; . venv/bin/activate; python -m pip install -r dev-requirements.txt
+	$(PYTHON) -m venv venv; . venv/bin/activate; python -m pip install -r dev-requirements.txt; python -m pip install -e .
 
 .PHONY: clean
 clean:
