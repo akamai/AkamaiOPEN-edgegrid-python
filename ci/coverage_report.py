@@ -15,7 +15,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 
-def parse_line_rate(xml_path: str) -> float:
+def parse_line_coverage(xml_path: str) -> float:
     """Return the top-level line coverage rate (0–1) from a Cobertura XML file."""
     try:
         tree = ET.parse(xml_path)  # noqa: S314 — file is a trusted CI artifact
@@ -60,7 +60,7 @@ def main() -> None:
             print(f"Error: expected VERSION:PATH, got {entry!r}", file=sys.stderr)
             sys.exit(1)
         version, xml_path = entry.split(":", 1)
-        rate = parse_line_rate(xml_path)
+        rate = parse_line_coverage(xml_path)
         rows.append((version, rate))
 
     table = build_table(rows)
