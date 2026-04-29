@@ -101,6 +101,12 @@ jobs:
             xml="${dir}coverage/cobertura-coverage.xml"
             if [[ -f "$xml" ]]; then
               args+=("${version}:${xml}")
+            else
+              echo "::warning::Coverage report not found for Python ${version}: ${xml}" >&2
             fi
           done
+          if [[ ${#args[@]} -eq 0 ]]; then
+            echo "::error::No coverage reports found; cannot generate summary." >&2
+            exit 1
+          fi
           python ci/coverage_report.py "${args[@]}" >> "$GITHUB_STEP_SUMMARY"
