@@ -2,6 +2,15 @@
 
 History
 -------
+2.0.6 (2026-05-06)
+++++++++++++++++++
+
+* Improvements
+    - `GH#132 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/pull/132>`_: added GitHub Actions workflow for unit tests
+    - `GH#133 <https://github.com/akamai/AkamaiOPEN-edgegrid-python/pull/133>`_: setuptools 82 compatibility — replaced deprecated ``pkg_resources`` with PEP 420 namespace package discovery
+    - Added coverage reporting and namespace package verification to CI/CD pipeline
+    - Updated dependencies: ``requests`` 2.33.0, ``pytest`` 9.0.3, ``pygments`` 2.20.0
+
 2.0.5 (2026-01-27)
 ++++++++++++++++++
 
