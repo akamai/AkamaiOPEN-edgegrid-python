@@ -36,6 +36,6 @@ from .edgerc import EdgeRc
 __all__ = ['EdgeGridAuth', 'EdgeRc']
 
 __title__ = 'edgegrid-python'
-__version__ = '2.0.6'
+__version__ = '2.0.7rc1'
 __license__ = 'Apache 2.0'
 __copyright__ = 'Copyright 2026 Akamai Technologies'

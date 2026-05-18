@@ -2,6 +2,14 @@
 
 History
 -------
+
+2.0.7 (UNRELEASED)
+++++++++++++++++++
+
+* Improvements
+    - Added explicit permissions to GitHub Actions test workflow jobs
+    - Updated dependencies: ``urllib3`` 2.7.0, ``tomlkit`` 0.14.0, ``dill`` 0.4.1, ``coverage[toml]`` 7.13.2
+
 2.0.6 (2026-05-07)
 ++++++++++++++++++
 
