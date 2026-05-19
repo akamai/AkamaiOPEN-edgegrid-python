@@ -3,7 +3,7 @@
 History
 -------
 
-2.0.7 (UNRELEASED)
+2.0.7 (2026-05-19)
 ++++++++++++++++++
 
 * Improvements
