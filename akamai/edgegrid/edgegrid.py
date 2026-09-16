@@ -44,8 +44,8 @@ def base64_sha256(data):
 
 
 def read_stream_and_rewind(f, max_read):
-    """Reads up to read_max bytes from a python file object (like _io.BufferedReader)
-    or a MultipartEncoder object, then rewinds the stream.
+    """Reads up to max_read bytes from a python file object (like _io.BufferedReader)
+    or a MultipartEncoder object, then restores the original stream position.
 
     The read() method of these objects is decorated by httpie with a side-effect code which
     prints the body content to stdout when the 'B' option is specified for --print. However,
