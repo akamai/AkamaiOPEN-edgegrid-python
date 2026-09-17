@@ -18,7 +18,7 @@ idna==3.19
     # via requests
 iniconfig==2.3.0
     # via pytest
-isort==7.0.0
+isort==9.0.1
     # via pylint
 mccabe==0.7.0
     # via pylint
