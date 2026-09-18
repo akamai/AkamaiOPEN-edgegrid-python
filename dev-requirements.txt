@@ -18,8 +18,6 @@ idna==3.19
     # via requests
 iniconfig==2.3.0
     # via pytest
-isort==9.0.1
-    # via pylint
 mccabe==0.7.0
     # via pylint
 packaging==25.0
@@ -32,7 +30,7 @@ pluggy==1.6.0
     #   pytest-cov
 pygments==2.20.0
     # via pytest
-pylint==4.0.4
+pylint==4.0.8
     # via edgegrid-python (setup.py)
 pytest==9.0.3
     # via
