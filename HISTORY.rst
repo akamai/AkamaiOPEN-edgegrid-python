@@ -3,6 +3,14 @@
 History
 -------
 
+2.0.8 (2026-09-21)
+++++++++++++++++++
+
+* Improvements
+    - Updated dependencies: ``coverage[toml]`` 7.16.1, ``idna`` 3.19, ``pylint`` 4.0.8,
+      ``pytest-cov`` 7.1.0, ``tomlkit`` 0.15.1
+
+
 2.0.7 (2026-05-19)
 ++++++++++++++++++
 
