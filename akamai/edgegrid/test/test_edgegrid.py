@@ -254,6 +254,15 @@ class TestReadBodyContent:
 
 class TestReadStreamAndRewind:
     """Test read_stream_and_rewind"""
+    @pytest.mark.parametrize('position', [5, 22])
+    def test_preserves_file_position(self, sample_file, position):
+        sample_file.seek(position)
+        expected = b'this is a sample file.'[position:position + 4]
+
+        assert eg.read_stream_and_rewind(sample_file, 4) == expected
+        assert sample_file.tell() == position
+        assert sample_file.read() == b'this is a sample file.'[position:]
+
     def test_with_file_object(self, sample_file):
         assert eg.read_stream_and_rewind(sample_file, 32) == b'this is a sample file.'
         assert sample_file.read() == b'this is a sample file.'
@@ -331,6 +340,27 @@ class TestDetermineBodyLen:
         with pytest.raises(io.UnsupportedOperation) as excinfo:
             eg.determine_body_len(io.StringIO("Hello, string"))
         assert excinfo.match('fileno')
+
+
+def test_signing_partially_read_upload_preserves_body(testdata, sample_file):
+    auth = EdgeGridAuth(
+        client_token=testdata['client_token'],
+        client_secret=testdata['client_secret'],
+        access_token=testdata['access_token'],
+    )
+    sample_file.seek(5)
+    remaining_body = b'is a sample file.'
+    request = requests.Request('POST', testdata['base_url'], data=sample_file).prepare()
+    expected_request = requests.Request('POST', testdata['base_url'], data=remaining_body).prepare()
+
+    expected_header = auth.ah.make_auth_header(
+        expected_request, testdata['timestamp'], testdata['nonce'])
+    actual_header = auth.ah.make_auth_header(
+        request, testdata['timestamp'], testdata['nonce'])
+
+    assert actual_header == expected_header
+    assert int(request.headers['Content-Length']) == len(remaining_body)
+    assert request.body.read() == remaining_body
 
 
 def test_json(testdata):
