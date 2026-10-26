@@ -3,6 +3,16 @@
 History
 -------
 
+2.0.9 (2026-10-28)
+++++++++++++++++++
+
+* Improvements
+
+    - Updated vulnerable dependencies:
+        - ``certifi`` from 2026.1.4 to 2026.10.19
+        - ``urllib3`` from 2.7.0 to 2.8.0
+    - Dropped support for Python 3.10, the minimum supported version is now Python 3.11
+
 2.0.8 (2026-09-21)
 ++++++++++++++++++
 
