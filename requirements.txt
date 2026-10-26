@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-certifi==2026.1.4
+certifi==2026.10.19
     # via requests
 charset-normalizer==3.4.4
     # via requests
@@ -16,5 +16,5 @@ requests==2.33.0
     #   requests-toolbelt
 requests-toolbelt==1.0.0
     # via edgegrid-python (setup.py)
-urllib3==2.7.0
+urllib3==2.8.0
     # via requests
