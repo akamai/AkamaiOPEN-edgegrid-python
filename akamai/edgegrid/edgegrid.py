@@ -44,14 +44,14 @@ def base64_sha256(data):
 
 
 def read_stream_and_rewind(f, max_read):
-    """Reads up to read_max bytes from a python file object (like _io.BufferedReader)
-    or a MultipartEncoder object, then rewinds the stream.
+    """Reads up to max_read bytes from a python file object (like _io.BufferedReader)
+    or a MultipartEncoder object, then restores the original stream position.
 
     The read() method of these objects is decorated by httpie with a side-effect code which
     prints the body content to stdout when the 'B' option is specified for --print. However,
     it does not trigger in the pre-request phase when this plugin is executed. Still, after reading
-    we must set the stream position to the beginning to not impact subsequent reads outside
-    the plugin. (We don't assume we can be passed a partially read stream to the plugin.)
+    we must restore the stream's original position to not impact subsequent reads outside
+    the plugin. MultipartEncoder and readers without tell() are rewound to the beginning.
 
     Raises TypeError if read() or seek() is not supported by f or f._buffer. May potentially raise
     OSError for any failed I/O operation, in particular io.UnsupportedOperation if the stream is
@@ -59,12 +59,17 @@ def read_stream_and_rewind(f, max_read):
     sets body as bytes).
     """
     try:
+        position = f.tell()
+    except (AttributeError, OSError):
+        position = 0
+
+    try:
         res = f.read(max_read)
     except AttributeError as exc:
         raise TypeError(f'akamai.edgegrid: unexpected body type: {type(f).__name__}') from exc
 
     try:
-        f.seek(0)
+        f.seek(position)
     except AttributeError:
         # a MultipartEncoder
         try:
