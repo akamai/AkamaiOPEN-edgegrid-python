@@ -28,7 +28,7 @@ pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-pygments==2.20.0
+pygments==2.21.0
     # via pytest
 pylint==4.0.8
     # via edgegrid-python (setup.py)
